@@ -14,7 +14,8 @@ type Auth struct {
 }
 
 type StatusRes struct {
-	Status int    `json:"status"`
-	Msg    string `json:"msg"`
+	Status 	int    `json:"status"`
+	Msg    	string `json:"msg"`
+	Token	string `json:"token"`
 	Data []User
 }

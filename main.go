@@ -10,6 +10,7 @@ import (
 	"./config"
 	"./controllers"
 
+	jwt "github.com/dgrijalva/jwt-go"
 	_ "github.com/go-sql-driver/mysql"
 	sessions "github.com/kataras/go-sessions"
 	//"golang.org/x/crypto/bcrypt"
@@ -43,4 +44,31 @@ func logout(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(res)
+}
+
+func auth(w http.ResponseWriter, r *http.Request) {
+	var statusRes models.StatusRes
+	var arr_user []models.User
+
+	tokenString := r.Header.Get("Authorization")
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if jwt.GetSigningMethod("HS256") != token.Method {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+
+		return []byte("secret"), nil
+	})
+
+	if token != nil && err == nil {
+		fmt.Println("token verified")
+	} else {
+		statusRes.Status	= 400
+			statusRes.Msg		= "not authorized"
+			statusRes.Token		= ""
+			statusRes.Data		= arr_user
+
+			result := statusRes
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(result)
+	}
 }

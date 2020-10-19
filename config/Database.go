@@ -8,10 +8,18 @@ import (
 	"database/sql"
 )
 
+// const (
+// 	DB_USER = "root"
+// 	DB_PASS = ""
+// 	DB_HOST = "127.0.0.1"
+// 	DB_PORT = 3306
+// 	DB_NAME = "ebindalwasmin"
+// )
+
 const (
-	DB_USER = "root"
-	DB_PASS = ""
-	DB_HOST = "127.0.0.1"
+	DB_USER = "user"
+	DB_PASS = "GtXgl3ug!Do!"
+	DB_HOST = "10.0.30.90"
 	DB_PORT = 3306
 	DB_NAME = "ebindalwasmin"
 )

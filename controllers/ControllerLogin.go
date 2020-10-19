@@ -9,6 +9,7 @@ import (
 	"../models"
 	"../config"
 
+	jwt "github.com/dgrijalva/jwt-go"
 	_ "github.com/go-sql-driver/mysql"
 	sessions "github.com/kataras/go-sessions"
 	"golang.org/x/crypto/bcrypt"
@@ -52,8 +53,23 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		session.Set("email", Users.Email)
 		session.Set("name", Users.Name)
 
+		sign := jwt.New(jwt.GetSigningMethod("HS256"))
+		token, err := sign.SignedString([]byte("secret"))
+		if err != nil {
+			statusRes.Status	= 400
+			statusRes.Msg		= "gagal login"
+			statusRes.Token		= ""
+			statusRes.Data		= arr_user
+
+			result := statusRes
+			
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(result)
+		}
+
 		statusRes.Status	= 200
 		statusRes.Msg		= "berhasil login"
+		statusRes.Token		= token
 		statusRes.Data 		=  arr_user
 		
 		result := statusRes
