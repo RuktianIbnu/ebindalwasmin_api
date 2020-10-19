@@ -1,14 +1,15 @@
 package models
 
 type PasporData struct {
-	Id 			int `JSON:"Id"`
-	Id_jenis 	int `JSON:"Id"`
-	Id_user 	int `JSON:"Id"`
-	Id_kantor 	int `JSON:"Id"`
-	Tanggal 	string `JSON:"Id"`
-	Laki 		string `JSON:"Id"`
-	Perempuan 	string `JSON:"Id"`
-	Total 		int `JSON:"Id"`
+	Id 			int `JSON:"id"`
+	Id_jenis 	int `JSON:"id_jenis"`
+	Id_user 	int `JSON:"id_user"`
+	Id_kantor 	int `JSON:"Iid_kantord"`
+	Tanggal 	string `JSON:"tanggal"`
+	Laki 		string `JSON:"laki"`
+	Perempuan 	string `JSON:"perempuan"`
+	Total 		int `JSON:"total"`
+	Id_wilayah_kerja 		int `JSON:"Id_wilayah_kerja"`
 }
 
 type PasporDataDetail struct {
@@ -22,6 +23,8 @@ type PasporDataDetail struct {
 	Laki 		int `JSON:"laki"`
 	Perempuan 	int `JSON:"perempuan"`
 	Total 		int `JSON:"total"`
+	Id_wilayah_kerja 		int `JSON:"id_wilayah_kerja"`
+	Nama_wilayah_kerja	string `JSON:"nama_wilayah_kerja"`
 }
 
 type StatusResPaspor struct {

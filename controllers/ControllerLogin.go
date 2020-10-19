@@ -22,6 +22,7 @@ var Auths models.Auth
 var statusRes models.StatusRes
 
 func Login(w http.ResponseWriter, r *http.Request) {
+	db := config.Connect()
 	var arr_user []models.User
 	session := sessions.Start(w, r)
 	if len(session.GetString("username")) != 0 && checkErr(w, r, err) {
@@ -53,29 +54,41 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		session.Set("email", Users.Email)
 		session.Set("name", Users.Name)
 
+		//key := r.Header.Get("key")
 		sign := jwt.New(jwt.GetSigningMethod("HS256"))
 		token, err := sign.SignedString([]byte("secret"))
-		if err != nil {
-			statusRes.Status	= 400
-			statusRes.Msg		= "gagal login"
-			statusRes.Token		= ""
-			statusRes.Data		= arr_user
 
-			result := statusRes
-			
-			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(result)
-		}
-
-		statusRes.Status	= 200
-		statusRes.Msg		= "berhasil login"
-		statusRes.Token		= token
-		statusRes.Data 		=  arr_user
-		
-		result := statusRes
-		
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(result)
+		createData, er := db.Prepare("UPDATE users SET remember_token=? WHERE email=?")
+			if err != nil {
+				statusRes.Status	= 400
+				statusRes.Msg		= "gagal generate token"
+				statusRes.Token		= token
+				result := statusRes
+				
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(result)
+			} else {
+				if er != nil {
+					statusRes.Status	= 400
+					statusRes.Msg		= "gagal update token"
+					statusRes.Token		= ""
+					result := statusRes
+					
+					w.Header().Set("Content-Type", "application/json")
+					json.NewEncoder(w).Encode(result)
+				}else{
+					createData.Exec(token,email)
+					statusRes.Status	= 200
+					statusRes.Msg		= "berhasil login"
+					statusRes.Token		= token
+					statusRes.Data 		=  arr_user
+					
+					result := statusRes
+					
+					w.Header().Set("Content-Type", "application/json")
+					json.NewEncoder(w).Encode(result)
+				}
+			}
 	} else {
 		//login failed
 		statusRes.Status	= 400

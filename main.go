@@ -1,10 +1,8 @@
 package main
 
 import (
-	//"database/sql"
 	"encoding/json"
 	"fmt"
-	//"log"
 	"net/http"
 	"./models"
 	"./config"
@@ -13,8 +11,6 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 	_ "github.com/go-sql-driver/mysql"
 	sessions "github.com/kataras/go-sessions"
-	//"golang.org/x/crypto/bcrypt"
-	// "os"
 )
 
 func main() {
@@ -24,7 +20,8 @@ func main() {
 	// routes.NewRouter()
 
 	http.HandleFunc("/login", controllers.Login)
-	http.HandleFunc("/logout", logout)
+	http.HandleFunc("/paspor/create", controllers.CreateDataPaspor)
+	
 	defer db.Close()
 	
 
