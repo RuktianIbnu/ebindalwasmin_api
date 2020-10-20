@@ -1,6 +1,6 @@
 package models
 
-type PasporData struct {
+type PasporData []struct {
 	Id 			int `JSON:"id"`
 	Id_jenis 	int `JSON:"id_jenis"`
 	Id_user 	int `JSON:"id_user"`
