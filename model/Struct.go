@@ -1,13 +1,13 @@
 package model
 
-// User ...
-type User struct {
-	ID         string `form:"id" json:"id"`
-	Name       string
-	Email      string
-	IDKantor   string
-	NamaKantor string
-}
+// // User ...
+// type User struct {
+// 	ID         string `form:"id" json:"id"`
+// 	Name       string
+// 	Email      string
+// 	IDKantor   string
+// 	NamaKantor string
+// }
 
 // Auth ...
 type Auth struct {
