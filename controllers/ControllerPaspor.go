@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"ebindalwasmin_api/models"
+	"ebindalwasmin_api/model"
 	"fmt"
 	"net/http"
 
@@ -12,14 +12,13 @@ import (
 	// _ "github.com/go-sql-driver/mysql"
 	_ "github.com/go-sql-driver/mysql"
 
-	//"io/ioutil"
 	"log"
 )
 
 var er error
-var pasporData models.PasporData
-var pasporDataDetail models.PasporDataDetail
-var statusResPaspor models.StatusResPaspor
+var pasporData model.PasporData
+var pasporDataDetail model.PasporDataDetail
+var statusResPaspor model.StatusResPaspor
 var result = statusResPaspor
 
 // CreateDataPaspor ...
@@ -38,7 +37,7 @@ func CreateDataPaspor(w http.ResponseWriter, r *http.Request) {
 			return []byte("secret"), nil
 		})
 		if token != nil && err == nil {
-			var pasporDatas []models.PasporData
+			var pasporDatas []model.PasporData
 			err := json.NewDecoder(r.Body).Decode(&pasporDatas)
 			log.Println(pasporDatas)
 			if err != nil {

@@ -2,7 +2,7 @@ package controllers
 
 import (
 	//"database/sql"
-	"ebindalwasmin_api/models"
+	"ebindalwasmin_api/model"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -22,17 +22,17 @@ import (
 var err error
 
 // Users ...
-var Users models.User
+var Users model.User
 
 // Auths ...
-var Auths models.Auth
+var Auths model.Auth
 
-var statusRes models.StatusRes
+var statusRes model.StatusRes
 
 // Login ...
 func Login(w http.ResponseWriter, r *http.Request) {
 	db := config.Connect()
-	var arrUser []models.User
+	var arrUser []model.User
 	session := sessions.Start(w, r)
 	if len(session.GetString("username")) != 0 && checkErr(w, r, err) {
 		//check session if avaliabel
@@ -111,8 +111,8 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 // QueryUser ...
-func QueryUser(email string) models.User {
-	var arrUser []models.User
+func QueryUser(email string) model.User {
+	var arrUser []model.User
 	db := config.Connect()
 
 	rows, err := db.Query(`
