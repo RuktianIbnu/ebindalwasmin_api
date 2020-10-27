@@ -7,19 +7,23 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/gavv/monotime v0.0.0-20190418164738-30dba4353424 // indirect
+	github.com/gin-contrib/cors v1.3.1
+	github.com/gin-gonic/gin v1.6.3
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/google/go-querystring v1.0.0 // indirect
-	github.com/gorilla/handlers v1.5.1
-	github.com/gorilla/mux v1.8.0
+	github.com/gorilla/handlers v1.5.1 // indirect
+	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
 	github.com/imdario/mergo v0.3.11 // indirect
 	github.com/imkira/go-interpol v1.1.0 // indirect
 	github.com/iris-contrib/httpexpect v1.1.2 // indirect
 	github.com/jinzhu/gorm v1.9.16
+	github.com/joho/godotenv v1.3.0
 	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect
 	github.com/kataras/go-errors v0.0.3 // indirect
 	github.com/kataras/go-serializer v0.0.4 // indirect
 	github.com/kataras/go-sessions v3.0.0+incompatible
+	github.com/lib/pq v1.8.0 // indirect
 	github.com/mattn/go-colorable v0.1.8 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.4 // indirect
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
