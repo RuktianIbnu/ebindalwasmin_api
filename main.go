@@ -1,12 +1,12 @@
 package main
 
 import (
+	"ebindalwasmin_api/config"
+	"ebindalwasmin_api/controllers"
+	"ebindalwasmin_api/model"
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"./models"
-	"./config"
-	"./controllers"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	_ "github.com/go-sql-driver/mysql"
@@ -15,22 +15,21 @@ import (
 
 func main() {
 	db := config.Connect()
-	
+
 	// config.Connect()
 	// routes.NewRouter()
 
 	http.HandleFunc("/login", controllers.Login)
 	http.HandleFunc("/paspor/create", controllers.CreateDataPaspor)
-	
+
 	defer db.Close()
-	
 
 	fmt.Println("Server running on port :8001")
 	http.ListenAndServe(":8001", nil)
 }
 
 func logout(w http.ResponseWriter, r *http.Request) {
-	var statusRes models.StatusRes
+	var statusRes model.StatusRes
 	session := sessions.Start(w, r)
 	session.Clear()
 	sessions.Destroy(w, r)
@@ -44,8 +43,8 @@ func logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func auth(w http.ResponseWriter, r *http.Request) {
-	var statusRes models.StatusRes
-	var arr_user []models.User
+	var statusRes model.StatusRes
+	var arr_user []model.User
 
 	tokenString := r.Header.Get("Authorization")
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
@@ -59,12 +58,12 @@ func auth(w http.ResponseWriter, r *http.Request) {
 	if token != nil && err == nil {
 		fmt.Println("token verified")
 	} else {
-		statusRes.Status	= 400
-			statusRes.Msg		= "not authorized"
-			statusRes.Token		= ""
-			statusRes.Data		= arr_user
+		statusRes.Status = 400
+		statusRes.Msg = "not authorized"
+		statusRes.Token = ""
+		statusRes.Data = arr_user
 
-			result := statusRes
+		result := statusRes
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(result)
 	}

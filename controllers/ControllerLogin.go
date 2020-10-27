@@ -2,39 +2,48 @@ package controllers
 
 import (
 	//"database/sql"
+	"ebindalwasmin_api/model"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
-	"../models"
-	"../config"
+
+	"ebindalwasmin_api/config"
 
 	jwt "github.com/dgrijalva/jwt-go"
+
+	// _ "github.com/go-sql-driver/mysql"
 	_ "github.com/go-sql-driver/mysql"
+
 	sessions "github.com/kataras/go-sessions"
 	"golang.org/x/crypto/bcrypt"
-	// "os"
 )
 
 var err error
-var Users models.User
-var Auths models.Auth
-var statusRes models.StatusRes
 
+// Users ...
+var Users model.User
+
+// Auths ...
+var Auths model.Auth
+
+var statusRes model.StatusRes
+
+// Login ...
 func Login(w http.ResponseWriter, r *http.Request) {
 	db := config.Connect()
-	var arr_user []models.User
+	var arrUser []model.User
 	session := sessions.Start(w, r)
 	if len(session.GetString("username")) != 0 && checkErr(w, r, err) {
 		//check session if avaliabel
-		statusRes.Status	= 200
-		statusRes.Msg		= "berhasil login session avliabe"
+		statusRes.Status = 200
+		statusRes.Msg = "berhasil login session avliabe"
 		result := statusRes
 		json.NewEncoder(w).Encode(result)
 	}
 	if r.Method != "POST" {
-		statusRes.Status	= 400
-		statusRes.Msg		= "Method Must be post"
+		statusRes.Status = 400
+		statusRes.Msg = "Method Must be post"
 		result := statusRes
 		json.NewEncoder(w).Encode(result)
 	}
@@ -42,11 +51,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	password := r.FormValue("password")
 
 	Users := QueryUser(email)
-	
 
 	//deskripsi dan compare password
-	var password_tes = bcrypt.CompareHashAndPassword([]byte(Auths.Password), []byte(password))
-	
+	var passwordTes = bcrypt.CompareHashAndPassword([]byte(Auths.Password), []byte(password))
+
 	if password_tes == nil {
 		//login success
 		arr_user = append(arr_user, Users)
@@ -59,51 +67,52 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		token, err := sign.SignedString([]byte("secret"))
 
 		createData, er := db.Prepare("UPDATE users SET remember_token=? WHERE email=?")
-			if err != nil {
-				statusRes.Status	= 400
-				statusRes.Msg		= "gagal generate token"
-				statusRes.Token		= token
+		if err != nil {
+			statusRes.Status = 400
+			statusRes.Msg = "gagal generate token"
+			statusRes.Token = token
+			result := statusRes
+
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(result)
+		} else {
+			if er != nil {
+				statusRes.Status = 400
+				statusRes.Msg = "gagal update token"
+				statusRes.Token = ""
 				result := statusRes
-				
+
 				w.Header().Set("Content-Type", "application/json")
 				json.NewEncoder(w).Encode(result)
 			} else {
-				if er != nil {
-					statusRes.Status	= 400
-					statusRes.Msg		= "gagal update token"
-					statusRes.Token		= ""
-					result := statusRes
-					
-					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(result)
-				}else{
-					createData.Exec(token,email)
-					statusRes.Status	= 200
-					statusRes.Msg		= "berhasil login"
-					statusRes.Token		= token
-					statusRes.Data 		=  arr_user
-					
-					result := statusRes
-					
-					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(result)
-				}
+				createData.Exec(token, email)
+				statusRes.Status = 200
+				statusRes.Msg = "berhasil login"
+				statusRes.Token = token
+				statusRes.Data = arr_user
+
+				result := statusRes
+
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(result)
 			}
+		}
 	} else {
 		//login failed
-		statusRes.Status	= 400
-		statusRes.Msg		= "gagal login"
-		statusRes.Data		= arr_user
+		statusRes.Status = 400
+		statusRes.Msg = "gagal login"
+		statusRes.Data = arr_user
 
 		result := statusRes
-		
+
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(result)
 	}
 }
 
-func QueryUser(email string) models.User {
-	var arr_user []models.User
+// QueryUser ...
+func QueryUser(email string) model.User {
+	var arrUser []model.User
 	db := config.Connect()
 
 	rows, err := db.Query(`
@@ -111,17 +120,17 @@ func QueryUser(email string) models.User {
 		a.name, a.password, a.id_kantor, b.nama_kantor
 		FROM users as a
 		left join kantor as b on a.id_kantor = b.id_kantor WHERE email=?`, email)
-		if err != nil {
-			log.Print(err)
+	if err != nil {
+		log.Print(err)
+	}
+	for rows.Next() {
+		if err := rows.Scan(&Users.ID, &Users.Email, &Users.Name, &Auths.Password, &Users.Id_kantor, &Users.Nama_kantor); err != nil {
+			log.Fatal(err.Error())
+		} else {
+			arr_user = append(arr_user, Users)
 		}
-		for rows.Next() {
-			if err := rows.Scan(&Users.ID, &Users.Email, &Users.Name, &Auths.Password, &Users.Id_kantor, &Users.Nama_kantor); err != nil {
-				log.Fatal(err.Error())
-			} else {
-				arr_user = append(arr_user, Users)
-			}
-		}
-		
+	}
+
 	return Users
 }
 
