@@ -11,6 +11,7 @@ type Repository interface {
 	// Create(data *model.User) (lastID int64, err error)
 	// UpdateOneByID(data *model.User) (rowsAffected int64, err error)
 	GetOneByID(id int64) (*model.User, error)
+	GetUserPasswordByEmail(email string) (int64, string, error)
 	// GetAll(limit, page int, search string) (result []*model.User, err error)
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
@@ -90,7 +91,7 @@ func (m *repository) GetOneByID(id int64) (*model.User, error) {
 	deleted_at, 
 	coalesce(id_kantor, 0)     
 	FROM users 
-	WHERE id = ?`
+	WHERE id = ? AND active = 1`
 
 	data := model.User{}
 
@@ -119,6 +120,28 @@ func (m *repository) GetOneByID(id int64) (*model.User, error) {
 	}
 
 	return &data, nil
+}
+
+func (m *repository) GetUserPasswordByEmail(email string) (int64, string, error) {
+	query := `SELECT 
+	id, 
+	coalesce(password, '')  
+	FROM users 
+	WHERE email = ? AND active = 1`
+
+	var (
+		id  int64
+		pwd string
+	)
+
+	if err := m.DB.QueryRow(query, email).Scan(
+		&id,
+		&pwd,
+	); err != nil {
+		return -1, "", err
+	}
+
+	return id, pwd, nil
 }
 
 // func (m *repository) GetAll(limit, page int, search string) (result []*model.User, err error) {
