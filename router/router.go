@@ -5,8 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 
 	gh "ebindalwasmin_api/handler/general"
+	kh "ebindalwasmin_api/handler/kategoripnbp"
 	uh "ebindalwasmin_api/handler/user"
-	"ebindalwasmin_api/middleware/auth"
 )
 
 // Routes ...
@@ -23,14 +23,17 @@ func Routes() *gin.Engine {
 
 	userHandler := uh.NewHandler()
 	generalHandler := gh.NewHandler()
+	kategoriPNBPHandler := kh.NewHandler()
 
 	v1 := r.Group("/v1")
 	{
 		v1.POST("/login", generalHandler.Login)
 
-		resources := v1.Group("/resources").Use(auth.Middleware())
+		resources := v1.Group("/resources")
 		{
 			resources.GET("/user/:id", userHandler.GetOneByID)
+
+			resources.GET("/kategori-pnbp/:parent", kategoriPNBPHandler.GetAllByParent)
 		}
 	}
 

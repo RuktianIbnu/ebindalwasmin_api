@@ -17,11 +17,13 @@ type TokenMetadata struct {
 
 // CreateToken ...
 func CreateToken(userID int64, email string) (string, error) {
+	// tokenExp, _ := time.ParseDuration(os.Getenv("TOKEN_EXP"))
+
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
 	claims["user_id"] = userID
 	claims["email"] = email
-	claims["exp"] = time.Now().Add(time.Second * 20).Unix()
+	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
 
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	token, err := at.SignedString([]byte(os.Getenv("JWT_SECRET")))

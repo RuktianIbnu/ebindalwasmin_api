@@ -24,3 +24,15 @@ type User struct {
 	DeletedAt        *time.Time `json:"deleted_at"`
 	IDKantor         int64      `json:"id_kantor"`
 }
+
+// KategoriPNBP ...
+type KategoriPNBP struct {
+	ID          int64      `json:"id"`
+	NamaLayanan string     `json:"nama_layanan"`
+	Satuan      string     `json:"satuan"`
+	Parent      int64      `json:"parent,omitempty"`
+	TarifPNBP   int64      `json:"tarif_pnbp,omitempty"`
+	CreatedAt   *time.Time `json:"created_at,omitempty"`
+	UpdatedAt   *time.Time `json:"updated_at,omitempty"`
+	Status      int64      `json:"status"`
+}
