@@ -8,11 +8,11 @@ import (
 
 // Repository ...
 type Repository interface {
-	Create(data *model.User) (lastID int64, err error)
-	UpdateOneByID(data *model.User) (rowsAffected int64, err error)
-	GetOneByID(id int64) (result *model.User, err error)
-	GetAll(limit, page int, search string) (result []*model.User, err error)
-	DeleteOneByID(id int64) (rowsAffected int64, err error)
+	// Create(data *model.User) (lastID int64, err error)
+	// UpdateOneByID(data *model.User) (rowsAffected int64, err error)
+	GetOneByID(id int64) (*model.User, error)
+	// GetAll(limit, page int, search string) (result []*model.User, err error)
+	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
 
 type repository struct {
@@ -26,140 +26,159 @@ func NewRepository() Repository {
 	}
 }
 
-func (m *repository) Create(data *model.User) (lastID int64, err error) {
-	query := `INSERT INTO users(
-		id_client, id_client_parent, nama_domain, status
-	) VALUES($1, $2, $3, $4) RETURNING id`
+// func (m *repository) Create(data *model.User) (lastID int64, err error) {
+// 	query := `INSERT INTO users(
+// 		id_client, id_client_parent, nama_domain, status
+// 	) VALUES($1, $2, $3, $4) RETURNING id`
 
-	res, err := m.DB.Exec(query,
-		data.ID,
-		data.IDClient,
-		data.IDClientParent,
-		data.NamaDomain,
-		data.Status,
-	)
-	if err != nil {
-		return -1, err
-	}
+// 	res, err := m.DB.Exec(query,
+// 		data.ID,
+// 		data.IDClient,
+// 		data.IDClientParent,
+// 		data.NamaDomain,
+// 		data.Status,
+// 	)
+// 	if err != nil {
+// 		return -1, err
+// 	}
 
-	lastID, _ = res.LastInsertId()
+// 	lastID, _ = res.LastInsertId()
 
-	return
-}
+// 	return
+// }
 
-func (m *repository) UpdateOneByID(data *model.User) (rowsAffected int64, err error) {
-	query := `UPDATE sm_domain_client set 
-	id_client = $2, id_client_parent = $3, nama_domain = $4, status = $5 
-	WHERE id = $1`
+// func (m *repository) UpdateOneByID(data *model.User) (rowsAffected int64, err error) {
+// 	query := `UPDATE sm_domain_client set
+// 	id_client = $2, id_client_parent = $3, nama_domain = $4, status = $5
+// 	WHERE id = $1`
 
-	res, err := m.DB.Exec(query,
-		data.ID,
-		data.IDClient,
-		data.IDClientParent,
-		data.NamaDomain,
-		data.Status,
-	)
-	if err != nil {
-		return -1, err
-	}
+// 	res, err := m.DB.Exec(query,
+// 		data.ID,
+// 		data.IDClient,
+// 		data.IDClientParent,
+// 		data.NamaDomain,
+// 		data.Status,
+// 	)
+// 	if err != nil {
+// 		return -1, err
+// 	}
 
-	rowsAffected, _ = res.RowsAffected()
+// 	rowsAffected, _ = res.RowsAffected()
 
-	return
-}
+// 	return
+// }
 
-func (m *repository) GetOneByID(id int64) (result *model.User, err error) {
-	query := `SELECT id, id_client, id_client_parent, nama_domain, status 
-	FROM sm_domain_client 
-	WHERE id = $1`
+func (m *repository) GetOneByID(id int64) (*model.User, error) {
+	query := `SELECT 
+	coalesce(id, 0), 
+	coalesce(type, ''), 
+	coalesce(name, ''), 
+	coalesce(email, ''), 
+	email_verified_at, 
+	coalesce(password, ''), 
+	password_changed_at, 
+	coalesce(active, 0), 
+	coalesce(timezone, ''), 
+	last_login_at, 
+	coalesce(last_login_ip, ''), 
+	coalesce(to_be_logged_out, 0), 
+	coalesce(provider, ''), 
+	coalesce(provider_id, ''), 
+	coalesce(remember_token, ''), 
+	created_at, 
+	updated_at, 
+	deleted_at, 
+	coalesce(id_kantor, 0)     
+	FROM users 
+	WHERE id = ?`
 
-	var (
-		data model.User
-
-		idS            sql.NullInt64
-		idClient       sql.NullInt64
-		idClientParent sql.NullInt64
-		namaDomain     sql.NullString
-		status         sql.NullBool
-	)
+	data := model.User{}
 
 	if err := m.DB.QueryRow(query, id).Scan(
-		&idS,
-		&idClient,
-		&idClientParent,
-		&namaDomain,
-		&status,
+		&data.ID,
+		&data.Type,
+		&data.Name,
+		&data.Email,
+		&data.EmailVerifiedAt,
+		&data.Password,
+		&data.PasswordChangeAt,
+		&data.Active,
+		&data.Timezone,
+		&data.LastLoginAt,
+		&data.LastLoginIP,
+		&data.ToBeLoggedOut,
+		&data.Provider,
+		&data.ProviderID,
+		&data.RememberToken,
+		&data.CreatedAt,
+		&data.UpdatedAt,
+		&data.DeletedAt,
+		&data.IDKantor,
 	); err != nil {
 		return nil, err
 	}
 
-	data.ID = idS.Int64
-	data.IDClient = idClient.Int64
-	data.IDClientParent = idClientParent.Int64
-	data.NamaDomain = namaDomain.String
-	data.Status = status.Bool
-
 	return &data, nil
 }
 
-func (m *repository) GetAll(limit, page int, search string) (result []*model.User, err error) {
-	query := `SELECT id, id_client, id_client_parent, nama_domain, status 
-	FROM sm_domain_client
-	WHERE nama_domain LIKE '%' || $3 || '%'
-	LIMIT $1 OFFSET $2`
+// func (m *repository) GetAll(limit, page int, search string) (result []*model.User, err error) {
+// 	query := `SELECT id, id_client, id_client_parent, nama_domain, status
+// 	FROM sm_domain_client
+// 	WHERE nama_domain LIKE '%' || $3 || '%'
+// 	LIMIT $1 OFFSET $2`
 
-	var (
-		list = make([]*model.User, 0)
-	)
+// 	var (
+// 		list = make([]*model.User, 0)
+// 	)
 
-	rows, err := m.DB.Query(query, limit, page, search)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
+// 	rows, err := m.DB.Query(query, limit, page, search)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	defer rows.Close()
 
-	for rows.Next() {
-		var (
-			data model.User
+// 	for rows.Next() {
+// 		var (
+// 			data model.User
 
-			idS            sql.NullInt64
-			idClient       sql.NullInt64
-			idClientParent sql.NullInt64
-			namaDomain     sql.NullString
-			status         sql.NullBool
-		)
+// 			idS            sql.NullInt64
+// 			idClient       sql.NullInt64
+// 			idClientParent sql.NullInt64
+// 			namaDomain     sql.NullString
+// 			status         sql.NullBool
+// 		)
 
-		if err := rows.Scan(
-			&idS,
-			&idClient,
-			&idClientParent,
-			&namaDomain,
-			&status,
-		); err != nil {
-			return nil, err
-		}
+// 		if err := rows.Scan(
+// 			&idS,
+// 			&idClient,
+// 			&idClientParent,
+// 			&namaDomain,
+// 			&status,
+// 		); err != nil {
+// 			return nil, err
+// 		}
 
-		data.ID = idS.Int64
-		data.IDClient = idClient.Int64
-		data.IDClientParent = idClientParent.Int64
-		data.NamaDomain = namaDomain.String
-		data.Status = status.Bool
+// 		data.ID = idS.Int64
+// 		data.IDClient = idClient.Int64
+// 		data.IDClientParent = idClientParent.Int64
+// 		data.NamaDomain = namaDomain.String
+// 		data.Status = status.Bool
 
-		list = append(list, &data)
-	}
+// 		list = append(list, &data)
+// 	}
 
-	return list, nil
-}
+// 	return list, nil
+// }
 
-func (m *repository) DeleteOneByID(id int64) (rowsAffected int64, err error) {
-	query := `DELETE FROM sm_domain_client WHERE id = $1`
+// func (m *repository) DeleteOneByID(id int64) (rowsAffected int64, err error) {
+// 	query := `DELETE FROM sm_domain_client WHERE id = $1`
 
-	res, err := m.DB.Exec(query, id)
-	if err != nil {
-		return -1, err
-	}
+// 	res, err := m.DB.Exec(query, id)
+// 	if err != nil {
+// 		return -1, err
+// 	}
 
-	rowsAffected, _ = res.RowsAffected()
+// 	rowsAffected, _ = res.RowsAffected()
 
-	return
-}
+// 	return
+// }
