@@ -3,12 +3,12 @@
 **Available Commands:**
 
 
-####Run
+#### Run
 
 `$ go run main.go`
 
 
 
-####Update Vendor Folder
+#### Update Vendor Folder
 
 `$ go mod vendor`
