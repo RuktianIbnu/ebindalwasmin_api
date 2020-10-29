@@ -25,7 +25,7 @@ var (
 func Init() *DB {
 	port, _ := strconv.Atoi(os.Getenv("DB_PORT"))
 	db, err := sql.Open("mysql", fmt.Sprintf(
-		"%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
+		"%s:%s@tcp(%s:%d)/%s?charset=utf8&loc=Local&parseTime=true",
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_PSWD"),
 		os.Getenv("DB_HOST"),
