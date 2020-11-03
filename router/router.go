@@ -6,6 +6,7 @@ import (
 
 	gh "ebindalwasmin_api/handler/general"
 	kh "ebindalwasmin_api/handler/kategoripnbp"
+	ph "ebindalwasmin_api/handler/paspor"
 	uh "ebindalwasmin_api/handler/user"
 )
 
@@ -24,6 +25,7 @@ func Routes() *gin.Engine {
 	userHandler := uh.NewHandler()
 	generalHandler := gh.NewHandler()
 	kategoriPNBPHandler := kh.NewHandler()
+	pasporHandler := ph.NewHandler()
 
 	v1 := r.Group("/v1")
 	{
@@ -34,6 +36,8 @@ func Routes() *gin.Engine {
 			resources.GET("/user/:id", userHandler.GetOneByID)
 
 			resources.GET("/kategori-pnbp/:parent", kategoriPNBPHandler.GetAllByParent)
+
+			resources.GET("/paspor-by/:tanggal", pasporHandler.GetAllByDate)
 		}
 	}
 

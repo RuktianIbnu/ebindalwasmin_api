@@ -36,3 +36,16 @@ type KategoriPNBP struct {
 	UpdatedAt   *time.Time `json:"updated_at,omitempty"`
 	Status      int64      `json:"status"`
 }
+
+// Paspor ...
+type Paspor struct {
+	ID             int64      `json:"id"`
+	IDJenis        int64      `json:"id_jenis"`
+	IDUser         int64      `json:"id_user,omitempty"`
+	IDKantor       int64      `json:"id_kantor,omitempty"`
+	Tanggal        *time.Time `json:"tanggal"`
+	Laki           int64      `json:"laki"`
+	Perempuan      int64      `json:"perempuan"`
+	Total          int64      `json:"total"`
+	IDWilayahKerja int64      `json:"id_wilayah_kerja,omitempty"`
+}
