@@ -2,7 +2,6 @@ package paspor
 
 import (
 	kp "ebindalwasmin_api/repository/paspor"
-	"time"
 
 	"ebindalwasmin_api/model"
 )
@@ -12,7 +11,7 @@ type Usecase interface {
 	// Create(data *model.User) (err error)
 	// UpdateOneByID(data *model.User) (rowsAffected int64, err error)
 	// GetOneByID(id int64) (result *model.User, err error)
-	GetAllByDate(date *time.Time) (result []*model.Paspor, err error)
+	GetAllByDate(date int64) (result []*model.Paspor, err error)
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
 
@@ -51,7 +50,7 @@ func NewUsecase() Usecase {
 // 	return m.userRepo.GetOneByID(id)
 // }
 
-func (m *usecase) GetAllByDate(date *time.Time) (result []*model.Paspor, err error) {
+func (m *usecase) GetAllByDate(date int64) (result []*model.Paspor, err error) {
 	return m.pasporRepo.GetAllByDate(date)
 }
 

@@ -3,8 +3,8 @@ package paspor
 import (
 	resp "ebindalwasmin_api/helpers/response"
 	pu "ebindalwasmin_api/usecase/paspor"
+	"log"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -100,11 +100,11 @@ func (m *handler) GetAllByDate(c *gin.Context) {
 	// 	search   = c.Query("search")
 	// )
 	var (
-		tm, _   = strconv.ParseInt(c.Param("tanggal"), 10, 64)
-		tanggal = time.Unix(tm, 0)
+		tm, _ = time.Parse("2006-01-02", c.Param("tanggal"))
 	)
 
-	list, err := m.pasporUsecase.GetAllByDate(&tanggal)
+	log.Println(tm.Unix())
+	list, err := m.pasporUsecase.GetAllByDate(tm.Unix())
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, resp.Format(500, err))
 		return

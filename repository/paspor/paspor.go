@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"ebindalwasmin_api/helpers"
 	"ebindalwasmin_api/model"
-	"time"
+	"log"
 )
 
 // Repository ...
@@ -13,7 +13,7 @@ type Repository interface {
 	// UpdateOneByID(data *model.User) (rowsAffected int64, err error)
 	// GetOneByID(id int64) (*model.User, error)
 	// GetUserPasswordByEmail(email string) (int64, string, error)
-	GetAllByDate(date *time.Time) (result []*model.Paspor, err error)
+	GetAllByDate(date int64) (result []*model.Paspor, err error)
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
 
@@ -145,18 +145,18 @@ func NewRepository() Repository {
 // 	return id, pwd, nil
 // }
 
-func (m *repository) GetAllByDate(date *time.Time) (result []*model.Paspor, err error) {
+func (m *repository) GetAllByDate(date int64) (result []*model.Paspor, err error) {
 	query := `select 
 	coalesce(id, 0), 
 	coalesce(id_jenis, 0), 
-	coalesce(id_user, ''), 
+	coalesce(id_user, 0), 
 	coalesce(id_kantor, 0), 
 	tanggal, 
 	coalesce(laki, 0), 
 	coalesce(perempuan, 0), 
 	coalesce(total, 0), 
 	coalesce(id_wilayah_kerja, 0)
-	from data_paspor where tanggal = ?`
+	from data_paspor where tanggal = FROM_UNIXTIME(?, '%Y-%m-%d')`
 
 	var (
 		list = make([]*model.Paspor, 0)
@@ -189,6 +189,7 @@ func (m *repository) GetAllByDate(date *time.Time) (result []*model.Paspor, err 
 
 		list = append(list, &data)
 	}
+	log.Println(list, date)
 
 	return list, nil
 }
