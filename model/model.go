@@ -49,3 +49,42 @@ type Paspor struct {
 	Total          int64      `json:"total"`
 	IDWilayahKerja int64      `json:"id_wilayah_kerja,omitempty"`
 }
+
+// Visa ...
+type Visa struct {
+	ID             int64      `json:"id"`
+	IDJenis        int64      `json:"id_jenis"`
+	IDUser         int64      `json:"id_user,omitempty"`
+	IDKantor       int64      `json:"id_kantor,omitempty"`
+	Tanggal        *time.Time `json:"tanggal"`
+	Laki           int64      `json:"laki"`
+	Perempuan      int64      `json:"perempuan"`
+	Total          int64      `json:"total"`
+	IDWilayahKerja int64      `json:"id_wilayah_kerja,omitempty"`
+}
+
+// Intal ...
+type Intal struct {
+	ID             int64      `json:"id"`
+	IDJenis        int64      `json:"id_jenis"`
+	IDUser         int64      `json:"id_user,omitempty"`
+	IDKantor       int64      `json:"id_kantor,omitempty"`
+	Tanggal        *time.Time `json:"tanggal"`
+	Laki           int64      `json:"laki"`
+	Perempuan      int64      `json:"perempuan"`
+	Total          int64      `json:"total"`
+	IDWilayahKerja int64      `json:"id_wilayah_kerja,omitempty"`
+}
+
+// Pnbp ...
+type Pnbp struct {
+	ID             int64      `json:"id"`
+	IDJenis        int64      `json:"id_jenis"`
+	IDUser         int64      `json:"id_user,omitempty"`
+	IDKantor       int64      `json:"id_kantor,omitempty"`
+	Tanggal        *time.Time `json:"tanggal"`
+	Laki           int64      `json:"laki"`
+	Perempuan      int64      `json:"perempuan"`
+	Total          int64      `json:"total"`
+	IDWilayahKerja int64      `json:"id_wilayah_kerja,omitempty"`
+}

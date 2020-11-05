@@ -24,12 +24,14 @@ func Middleware() gin.HandlerFunc {
 		if header.Authorization == "" {
 			c.JSON(http.StatusUnauthorized, resp.Format(500, errors.New("please provide authorization")))
 			c.Abort()
+			log.Println("kosong", header.Authorization)
 			return
 		}
 
 		if err := jwt.TokenValid(header.Authorization); err != nil {
 			c.JSON(http.StatusUnauthorized, resp.Format(500, errors.New("unauthorize")))
 			c.Abort()
+			log.Println("err != nil", header.Authorization)
 			return
 		}
 
@@ -37,6 +39,7 @@ func Middleware() gin.HandlerFunc {
 			log.Println(metadata)
 			c.Set("user_id", metadata.UserID)
 			c.Set("email", metadata.Email)
+			log.Println("err == nil", header.Authorization)
 		} else {
 			c.JSON(http.StatusUnauthorized, resp.Format(500, errors.New("unable to extract token metadata")))
 			c.Abort()
