@@ -5,9 +5,12 @@ import (
 	"github.com/gin-gonic/gin"
 
 	gh "ebindalwasmin_api/handler/general"
+	ih "ebindalwasmin_api/handler/intal"
 	kh "ebindalwasmin_api/handler/kategoripnbp"
 	ph "ebindalwasmin_api/handler/paspor"
+	pnbph "ebindalwasmin_api/handler/pnbp"
 	uh "ebindalwasmin_api/handler/user"
+	vh "ebindalwasmin_api/handler/visa"
 )
 
 // Routes ...
@@ -26,6 +29,9 @@ func Routes() *gin.Engine {
 	generalHandler := gh.NewHandler()
 	kategoriPNBPHandler := kh.NewHandler()
 	pasporHandler := ph.NewHandler()
+	visaHandler := vh.NewHandler()
+	intalHandler := ih.NewHandler()
+	pnbpHandler := pnbph.NewHandler()
 
 	v1 := r.Group("/v1")
 	{
@@ -38,6 +44,9 @@ func Routes() *gin.Engine {
 			resources.GET("/kategori-pnbp/:parent", kategoriPNBPHandler.GetAllByParent)
 
 			resources.GET("/paspor-by/:tanggal", pasporHandler.GetAllByDate)
+			resources.GET("/visa-by/:tanggal", visaHandler.GetAllByDate)
+			resources.GET("/intal-by/:tanggal", intalHandler.GetAllByDate)
+			resources.GET("/pnbp-by/:tanggal", pnbpHandler.GetAllByDate)
 		}
 	}
 
