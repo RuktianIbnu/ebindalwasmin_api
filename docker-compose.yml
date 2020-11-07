@@ -3,6 +3,8 @@ version: "3.3"
 services:
   ebindalwasmin:
     build: .
+    ports:
+        - 8000:8000
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.ebindalwasmin.tls=true"
