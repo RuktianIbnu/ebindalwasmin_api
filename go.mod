@@ -17,12 +17,12 @@ require (
 	github.com/imdario/mergo v0.3.11 // indirect
 	github.com/imkira/go-interpol v1.1.0 // indirect
 	github.com/iris-contrib/httpexpect v1.1.2 // indirect
-	github.com/jinzhu/gorm v1.9.16
+	github.com/jinzhu/gorm v1.9.16 // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect
 	github.com/kataras/go-errors v0.0.3 // indirect
 	github.com/kataras/go-serializer v0.0.4 // indirect
-	github.com/kataras/go-sessions v3.0.0+incompatible
+	github.com/kataras/go-sessions v3.0.0+incompatible // indirect
 	github.com/lib/pq v1.8.0 // indirect
 	github.com/mattn/go-colorable v0.1.8 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.4 // indirect

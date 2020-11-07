@@ -1,7 +1,5 @@
 # github.com/ajg/form v1.5.1
 ## explicit
-# github.com/andybalholm/brotli v1.0.0
-github.com/andybalholm/brotli
 # github.com/dgrijalva/jwt-go v3.2.0+incompatible
 ## explicit
 github.com/dgrijalva/jwt-go
@@ -49,7 +47,6 @@ github.com/golang/protobuf/proto
 ## explicit
 # github.com/jinzhu/gorm v1.9.16
 ## explicit
-github.com/jinzhu/gorm/dialects/mysql
 # github.com/joho/godotenv v1.3.0
 ## explicit
 github.com/joho/godotenv
@@ -63,11 +60,6 @@ github.com/json-iterator/go
 ## explicit
 # github.com/kataras/go-sessions v3.0.0+incompatible
 ## explicit
-github.com/kataras/go-sessions
-# github.com/klauspost/compress v1.10.7
-github.com/klauspost/compress/flate
-github.com/klauspost/compress/gzip
-github.com/klauspost/compress/zlib
 # github.com/leodido/go-urn v1.2.0
 github.com/leodido/go-urn
 # github.com/lib/pq v1.8.0
@@ -92,7 +84,6 @@ github.com/modern-go/reflect2
 ## explicit
 # github.com/satori/go.uuid v1.2.0
 ## explicit
-github.com/satori/go.uuid
 # github.com/sergi/go-diff v1.1.0
 ## explicit
 # github.com/smartystreets/goconvey v1.6.4
@@ -101,13 +92,8 @@ github.com/satori/go.uuid
 ## explicit
 # github.com/ugorji/go/codec v1.1.7
 github.com/ugorji/go/codec
-# github.com/valyala/bytebufferpool v1.0.0
-github.com/valyala/bytebufferpool
 # github.com/valyala/fasthttp v1.16.0
 ## explicit
-github.com/valyala/fasthttp
-github.com/valyala/fasthttp/fasthttputil
-github.com/valyala/fasthttp/stackless
 # github.com/xeipuuv/gojsonschema v1.2.0
 ## explicit
 # github.com/yalp/jsonpath v0.0.0-20180802001716-5cc68e5049a0

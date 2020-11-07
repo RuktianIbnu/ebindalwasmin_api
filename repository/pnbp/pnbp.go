@@ -1,9 +1,10 @@
-package kategoripnbp
+package pnbp
 
 import (
 	"database/sql"
 	"ebindalwasmin_api/helpers"
 	"ebindalwasmin_api/model"
+	"log"
 )
 
 // Repository ...
@@ -12,7 +13,7 @@ type Repository interface {
 	// UpdateOneByID(data *model.User) (rowsAffected int64, err error)
 	// GetOneByID(id int64) (*model.User, error)
 	// GetUserPasswordByEmail(email string) (int64, string, error)
-	GetAllByParent(parent int64) (result []*model.KategoriParentPNBP, err error)
+	GetAllByDate(date int64) (result []*model.Pnbp, err error)
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
 
@@ -144,23 +145,24 @@ func NewRepository() Repository {
 // 	return id, pwd, nil
 // }
 
-func (m *repository) GetAllByParent(parent int64) (result []*model.KategoriParentPNBP, err error) {
+func (m *repository) GetAllByDate(date int64) (result []*model.Pnbp, err error) {
 	query := `select 
 	coalesce(id, 0), 
-	coalesce(nama_layanan, ''), 
-	coalesce(satuan, ''), 
-	coalesce(parent, 0), 
-	coalesce(tarifpnbp, 0), 
-	created_at, 
-	updated_at, 
-	coalesce(status, 0) 
-	from kategoripnbps where parent = ?`
+	coalesce(id_jenis, 0), 
+	coalesce(id_user, 0), 
+	coalesce(id_kantor, 0), 
+	tanggal, 
+	coalesce(laki, 0), 
+	coalesce(perempuan, 0), 
+	coalesce(total, 0), 
+	coalesce(id_wilayah_kerja, 0)
+	from data_pnbplainnya where tanggal = FROM_UNIXTIME(?, '%Y-%m-%d')`
 
 	var (
-		list = make([]*model.KategoriParentPNBP, 0)
+		list = make([]*model.Pnbp, 0)
 	)
 
-	rows, err := m.DB.Query(query, parent)
+	rows, err := m.DB.Query(query, date)
 	if err != nil {
 		return nil, err
 	}
@@ -168,116 +170,29 @@ func (m *repository) GetAllByParent(parent int64) (result []*model.KategoriParen
 
 	for rows.Next() {
 		var (
-			data model.KategoriParentPNBP
+			data model.Pnbp
 		)
 
 		if err := rows.Scan(
 			&data.ID,
-			&data.NamaLayanan,
-			&data.Satuan,
-			&data.Parent,
-			&data.TarifPNBP,
-			&data.CreatedAt,
-			&data.UpdatedAt,
-			&data.Status,
+			&data.IDJenis,
+			&data.IDUser,
+			&data.IDKantor,
+			&data.Tanggal,
+			&data.Laki,
+			&data.Perempuan,
+			&data.Total,
+			&data.IDWilayahKerja,
 		); err != nil {
 			return nil, err
 		}
 
 		list = append(list, &data)
 	}
+	log.Println(list, date)
 
 	return list, nil
 }
-
-// func (m *repository) getStructParent2(id int64) (result []*model.KategoriParent2PNBP, err error) {
-// 	query := `select
-// 	coalesce(id, 0),
-// 	coalesce(nama_layanan, ''),
-// 	coalesce(satuan, ''),
-// 	coalesce(parent, 0),
-// 	coalesce(tarifpnbp, 0),
-// 	created_at,
-// 	updated_at,
-// 	coalesce(status, 0)
-// 	from kategoripnbps where parent = ?`
-
-// 	var (
-// 		list2 = make([]*model.KategoriParent2PNBP, 0)
-// 	)
-
-// 	rows2, err := m.DB.Query(query, id)
-// 	if err != nil {
-
-// 	}
-// 	defer rows2.Close()
-
-// 	for rows2.Next() {
-// 		var (
-// 			data2 model.KategoriParent2PNBP
-// 		)
-
-// 		if err := rows2.Scan(
-// 			&data2.ID,
-// 			&data2.NamaLayanan,
-// 			&data2.Satuan,
-// 			&data2.Parent,
-// 			&data2.TarifPNBP,
-// 			&data2.CreatedAt,
-// 			&data2.UpdatedAt,
-// 			&data2.Status,
-// 		); err != nil {
-// 		}
-// 		m.getStructParent2(data2.ID)
-// 		list2 = append(list2, &data2)
-// 		log.Println("parent 2 : ", data2.ID)
-// 	}
-// 	return list2, nil
-// }
-
-// func (m *repository) getStructParent3(id int64) (result []*model.KategoriParent3PNBP, err error) {
-// 	query := `select
-// 	coalesce(id, 0),
-// 	coalesce(nama_layanan, ''),
-// 	coalesce(satuan, ''),
-// 	coalesce(parent, 0),
-// 	coalesce(tarifpnbp, 0),
-// 	created_at,
-// 	updated_at,
-// 	coalesce(status, 0)
-// 	from kategoripnbps where parent = ?`
-
-// 	var (
-// 		list3 = make([]*model.KategoriParent3PNBP, 0)
-// 	)
-
-// 	rows3, err := m.DB.Query(query, id)
-// 	if err != nil {
-
-// 	}
-// 	defer rows3.Close()
-
-// 	for rows3.Next() {
-// 		var (
-// 			data3 model.KategoriParent3PNBP
-// 		)
-
-// 		if err := rows3.Scan(
-// 			&data3.ID,
-// 			&data3.NamaLayanan,
-// 			&data3.Satuan,
-// 			&data3.Parent,
-// 			&data3.TarifPNBP,
-// 			&data3.CreatedAt,
-// 			&data3.UpdatedAt,
-// 			&data3.Status,
-// 		); err != nil {
-// 		}
-// 		list3 = append(list3, &data3)
-// 		//log.Println("parent 3 : ", data3)
-// 	}
-// 	return list3, nil
-// }
 
 // func (m *repository) DeleteOneByID(id int64) (rowsAffected int64, err error) {
 // 	query := `DELETE FROM sm_domain_client WHERE id = $1`

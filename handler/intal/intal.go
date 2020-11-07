@@ -1,9 +1,11 @@
-package kategoripnbp
+package intal
 
 import (
 	resp "ebindalwasmin_api/helpers/response"
-	ku "ebindalwasmin_api/usecase/kategoripnbp"
+	iu "ebindalwasmin_api/usecase/intal"
+	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,18 +15,18 @@ type Handler interface {
 	// Create(c *gin.Context)
 	// UpdateOneByID(c *gin.Context)
 	// GetOneByID(c *gin.Context)
-	GetAllByParent(c *gin.Context)
+	GetAllByDate(c *gin.Context)
 	// DeleteOneByID(c *gin.Context)
 }
 
 type handler struct {
-	kategoriPNBPUsecase ku.Usecase
+	intalUsecase iu.Usecase
 }
 
 // NewHandler ...
 func NewHandler() Handler {
 	return &handler{
-		ku.NewUsecase(),
+		iu.NewUsecase(),
 	}
 }
 
@@ -91,8 +93,18 @@ func NewHandler() Handler {
 // 	c.JSON(http.StatusOK, resp.Format(200, nil, data))
 // }
 
-func (m *handler) GetAllByParent(c *gin.Context) {
-	list, err := m.kategoriPNBPUsecase.GetAllByParent()
+func (m *handler) GetAllByDate(c *gin.Context) {
+	// var (
+	// 	limit, _ = strconv.Atoi(c.DefaultQuery("limit", "10"))
+	// 	page, _  = strconv.Atoi(c.DefaultQuery("page", "1"))
+	// 	search   = c.Query("search")
+	// )
+	var (
+		tm, _ = time.Parse("2006-01-02", c.Param("tanggal"))
+	)
+
+	log.Println(tm.Unix())
+	list, err := m.intalUsecase.GetAllByDate(tm.Unix())
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, resp.Format(500, err))
 		return
