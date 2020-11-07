@@ -7,6 +7,7 @@ import (
 	gh "ebindalwasmin_api/handler/general"
 	kh "ebindalwasmin_api/handler/kategoripnbp"
 	uh "ebindalwasmin_api/handler/user"
+	"ebindalwasmin_api/middleware/auth"
 )
 
 // Routes ...
@@ -29,7 +30,7 @@ func Routes() *gin.Engine {
 	{
 		v1.POST("/login", generalHandler.Login)
 
-		resources := v1.Group("/resources")
+		resources := v1.Group("/resources").Use(auth.Middleware())
 		{
 			resources.GET("/user/:id", userHandler.GetOneByID)
 
