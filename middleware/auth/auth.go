@@ -21,6 +21,8 @@ func Middleware() gin.HandlerFunc {
 		header := Header{}
 		c.ShouldBindHeader(&header)
 
+		log.Println(header.Authorization)
+
 		if header.Authorization == "" {
 			c.JSON(http.StatusUnauthorized, resp.Format(500, errors.New("please provide authorization")))
 			c.Abort()
