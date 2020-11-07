@@ -1,7 +1,7 @@
 version: "3.3"
 
 services:
-    ebindalwasmin:
+  ebindalwasmin:
     build: .
     labels:
       - "traefik.enable=true"
