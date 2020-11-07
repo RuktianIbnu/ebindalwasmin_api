@@ -10,6 +10,7 @@ import (
 	ph "ebindalwasmin_api/handler/paspor"
 	pnbph "ebindalwasmin_api/handler/pnbp"
 	uh "ebindalwasmin_api/handler/user"
+	vh "ebindalwasmin_api/handler/visa"
 	"ebindalwasmin_api/middleware/auth"
 )
 
