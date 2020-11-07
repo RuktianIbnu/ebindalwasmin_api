@@ -2,6 +2,7 @@ package general
 
 import (
 	resp "ebindalwasmin_api/helpers/response"
+	ur "ebindalwasmin_api/repository/user"
 	gu "ebindalwasmin_api/usecase/general"
 	"net/http"
 
@@ -19,6 +20,10 @@ type Handler interface {
 
 type handler struct {
 	generalUsecase gu.Usecase
+}
+
+type usecase struct {
+	userRepo ur.Repository
 }
 
 // NewHandler ...
@@ -48,5 +53,9 @@ func (m *handler) Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, resp.Format(200, nil, gin.H{"token": token}))
+	id, _, err := ur.NewRepository().GetUserPasswordByEmail(loginData.Email)
+	if err != nil {
+	}
+
+	c.JSON(http.StatusOK, resp.Format(200, nil, gin.H{"token": token, "id": id}))
 }
