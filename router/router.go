@@ -41,7 +41,7 @@ func Routes() *gin.Engine {
 		{
 			resources.GET("/user/:id", userHandler.GetOneByID)
 
-			resources.GET("/kategori-pnbp/:parent", kategoriPNBPHandler.GetAllByParent)
+			resources.GET("/kategori-pnbp", kategoriPNBPHandler.GetAllByParent)
 
 			resources.GET("/paspor-by/:tanggal", pasporHandler.GetAllByDate)
 			resources.GET("/visa-by/:tanggal", visaHandler.GetAllByDate)

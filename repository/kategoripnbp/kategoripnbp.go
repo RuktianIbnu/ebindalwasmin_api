@@ -12,7 +12,7 @@ type Repository interface {
 	// UpdateOneByID(data *model.User) (rowsAffected int64, err error)
 	// GetOneByID(id int64) (*model.User, error)
 	// GetUserPasswordByEmail(email string) (int64, string, error)
-	GetAllByParent(parent int64) (result []*model.KategoriParent1PNBP, err error)
+	GetAllByParent(parent int64) (result []*model.KategoriParentPNBP, err error)
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
 
@@ -144,7 +144,7 @@ func NewRepository() Repository {
 // 	return id, pwd, nil
 // }
 
-func (m *repository) GetAllByParent(parent int64) (result []*model.KategoriParent1PNBP, err error) {
+func (m *repository) GetAllByParent(parent int64) (result []*model.KategoriParentPNBP, err error) {
 	query := `select 
 	coalesce(id, 0), 
 	coalesce(nama_layanan, ''), 
@@ -157,68 +157,37 @@ func (m *repository) GetAllByParent(parent int64) (result []*model.KategoriParen
 	from kategoripnbps where parent = ?`
 
 	var (
-		list1 = make([]*model.KategoriParent1PNBP, 0)
+		list = make([]*model.KategoriParentPNBP, 0)
 	)
 
-	rows1, err := m.DB.Query(query, parent)
+	rows, err := m.DB.Query(query, parent)
 	if err != nil {
 		return nil, err
 	}
-	defer rows1.Close()
+	defer rows.Close()
 
-	for rows1.Next() {
+	for rows.Next() {
 		var (
-			data1 model.KategoriParent1PNBP
+			data model.KategoriParentPNBP
 		)
 
-		if err := rows1.Scan(
-			&data1.ID,
-			&data1.NamaLayanan,
-			&data1.Satuan,
-			&data1.Parent,
-			&data1.TarifPNBP,
-			&data1.CreatedAt,
-			&data1.UpdatedAt,
-			&data1.Status,
+		if err := rows.Scan(
+			&data.ID,
+			&data.NamaLayanan,
+			&data.Satuan,
+			&data.Parent,
+			&data.TarifPNBP,
+			&data.CreatedAt,
+			&data.UpdatedAt,
+			&data.Status,
 		); err != nil {
 			return nil, err
 		}
-		// Batas ...
-		// var (
-		// 	list2 = make([]*model.KategoriParent2PNBP, 0)
-		// )
 
-		// rows2, err := m.DB.Query(query, data1.ID)
-		// if err != nil {
-		// 	return nil, err
-		// }
-		// defer rows2.Close()
-
-		// for rows2.Next() {
-		// 	var (
-		// 		data2 model.KategoriParent2PNBP
-		// 	)
-
-		// 	if err := rows2.Scan(
-		// 		&data2.ID,
-		// 		&data2.NamaLayanan,
-		// 		&data2.Satuan,
-		// 		&data2.Parent,
-		// 		&data2.TarifPNBP,
-		// 		&data2.CreatedAt,
-		// 		&data2.UpdatedAt,
-		// 		&data2.Status,
-		// 	); err != nil {
-		// 		return nil, err
-		// 	}
-		// 	list2 = append(list2, &data2)
-		// 	log.Println("parent 2 : ", data2)
-		// }
-		// Batas ...
-		list1 = append(list1, &data1)
-		//log.Println("parent 1 : ", data1.ID)
+		list = append(list, &data)
 	}
-	return list1, nil
+
+	return list, nil
 }
 
 // func (m *repository) getStructParent2(id int64) (result []*model.KategoriParent2PNBP, err error) {

@@ -26,37 +26,16 @@ type User struct {
 }
 
 // KategoriPNBP ...
-type KategoriParent1PNBP struct {
-	ID                  int64                 `json:"id"`
-	NamaLayanan         string                `json:"nama_layanan"`
-	Satuan              string                `json:"satuan"`
-	Parent              int64                 `json:"parent,omitempty"`
-	TarifPNBP           int64                 `json:"tarif_pnbp,omitempty"`
-	CreatedAt           *time.Time            `json:"created_at,omitempty"`
-	UpdatedAt           *time.Time            `json:"updated_at,omitempty"`
-	Status              int64                 `json:"status"`
-	KategoriParent2PNBP []KategoriParent2PNBP `json:"kategoriParent2PNBP"`
-}
-type KategoriParent2PNBP struct {
-	ID                  int64                 `json:"id"`
-	NamaLayanan         string                `json:"nama_layanan"`
-	Satuan              string                `json:"satuan"`
-	Parent              int64                 `json:"parent,omitempty"`
-	TarifPNBP           int64                 `json:"tarif_pnbp,omitempty"`
-	CreatedAt           *time.Time            `json:"created_at,omitempty"`
-	UpdatedAt           *time.Time            `json:"updated_at,omitempty"`
-	Status              int64                 `json:"status"`
-	KategoriParent3PNBP []KategoriParent3PNBP `json:"kategoriParent3PNBP"`
-}
-type KategoriParent3PNBP struct {
-	ID          int64      `json:"id"`
-	NamaLayanan string     `json:"nama_layanan"`
-	Satuan      string     `json:"satuan"`
-	Parent      int64      `json:"parent,omitempty"`
-	TarifPNBP   int64      `json:"tarif_pnbp,omitempty"`
-	CreatedAt   *time.Time `json:"created_at,omitempty"`
-	UpdatedAt   *time.Time `json:"updated_at,omitempty"`
-	Status      int64      `json:"status"`
+type KategoriParentPNBP struct {
+	ID          int64       `json:"id"`
+	NamaLayanan string      `json:"nama_layanan"`
+	Satuan      string      `json:"satuan"`
+	Parent      int64       `json:"parent,omitempty"`
+	TarifPNBP   int64       `json:"tarif_pnbp,omitempty"`
+	CreatedAt   *time.Time  `json:"created_at,omitempty"`
+	UpdatedAt   *time.Time  `json:"updated_at,omitempty"`
+	Status      int64       `json:"status"`
+	Child       interface{} `json:"child,omitempty"`
 }
 
 // Paspor ...

@@ -4,7 +4,6 @@ import (
 	resp "ebindalwasmin_api/helpers/response"
 	ku "ebindalwasmin_api/usecase/kategoripnbp"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -93,16 +92,7 @@ func NewHandler() Handler {
 // }
 
 func (m *handler) GetAllByParent(c *gin.Context) {
-	// var (
-	// 	limit, _ = strconv.Atoi(c.DefaultQuery("limit", "10"))
-	// 	page, _  = strconv.Atoi(c.DefaultQuery("page", "1"))
-	// 	search   = c.Query("search")
-	// )
-	var (
-		parent, _ = strconv.ParseInt(c.Param("parent"), 10, 64)
-	)
-
-	list, err := m.kategoriPNBPUsecase.GetAllByParent(parent)
+	list, err := m.kategoriPNBPUsecase.GetAllByParent()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, resp.Format(500, err))
 		return

@@ -11,7 +11,7 @@ type Usecase interface {
 	// Create(data *model.User) (err error)
 	// UpdateOneByID(data *model.User) (rowsAffected int64, err error)
 	// GetOneByID(id int64) (result *model.User, err error)
-	GetAllByParent(parent int64) (result []*model.KategoriParent1PNBP, err error)
+	GetAllByParent() (result []*model.KategoriParentPNBP, err error)
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
 
@@ -50,8 +50,29 @@ func NewUsecase() Usecase {
 // 	return m.userRepo.GetOneByID(id)
 // }
 
-func (m *usecase) GetAllByParent(parent int64) (result []*model.KategoriParent1PNBP, err error) {
-	return m.kategoriPNBPRepo.GetAllByParent(parent)
+func (m *usecase) GetAllByParent() (result []*model.KategoriParentPNBP, err error) {
+	parentList, err := m.kategoriPNBPRepo.GetAllByParent(0)
+	if err != nil {
+		return nil, nil
+	}
+
+	for _, v := range parentList {
+		childList, err := m.kategoriPNBPRepo.GetAllByParent(v.ID)
+		if err != nil {
+			return nil, nil
+		}
+		v.Child = childList
+
+		for _, j := range childList {
+			itemList, err := m.kategoriPNBPRepo.GetAllByParent(j.ID)
+			if err != nil {
+				return nil, nil
+			}
+			j.Child = itemList
+		}
+	}
+
+	return parentList, nil
 }
 
 // func (m *usecase) DeleteOneByID(id int64) (rowsAffected int64, err error) {
