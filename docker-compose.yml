@@ -30,6 +30,9 @@ services:
     volumes:
       - my-db:/var/lib/mysql
 
+volumes:
+  my-db:
+
 networks: 
   traefik:
     external: true
