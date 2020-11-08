@@ -14,6 +14,21 @@ services:
     restart: always
     networks: 
       - traefik
+  
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'ebindalwasmin'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'GtXgl3ug!Do!'
+      MYSQL_ROOT_PASSWORD: 'GtXgl3ug!Do!'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - my-db:/var/lib/mysql
 
 networks: 
   traefik:
