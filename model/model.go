@@ -51,6 +51,30 @@ type Paspor struct {
 	IDWilayahKerja int64      `json:"id_wilayah_kerja,omitempty"`
 }
 
+// Paspor Pivot Perwilayah
+type PasporPivotPerwilayah struct {
+	Periode          string `json:"periode"`
+	KabBangka        int64  `json:"kab_bangka"`
+	KabBangkaBarat   int64  `json:"kab_bangka_barat"`
+	KabBangkaSelatan int64  `json:"kab_bangka_selatan"`
+	KabBangkaTengah  int64  `json:"kab_bangka_tengah"`
+	PangkalPinang    int64  `json:"pangkal_pinang"`
+	KabBelitungTimur int64  `json:"kab_belitung_timur"`
+	KabBelitung      int64  `json:"kab_belitung"`
+	KabLainnya1      int64  `json:"kab_lainnya_1"`
+	KabLainnya2      int64  `json:"kab_lainnya_2"`
+}
+
+// Paspor Permohonan perkelamin per 10 hari...
+type PasporPermohonanperKelaminPer10hari struct {
+	Paspor         int64      `json:"paspor"`
+	Laki           int64      `json:"laki"`
+	Perempuan      int64      `json:"perempuan"`
+	Tanggal        *time.Time `json:"tanggal"`
+	IDWilayahKerja int64      `json:"id_wilayah_kerja,omitempty"`
+	IDKantor       int64      `json:"id_kantor,omitempty"`
+}
+
 // Visa ...
 type Visa struct {
 	ID             int64      `json:"id"`
@@ -88,4 +112,13 @@ type Pnbp struct {
 	Perempuan      int64      `json:"perempuan"`
 	Total          int64      `json:"total"`
 	IDWilayahKerja int64      `json:"id_wilayah_kerja,omitempty"`
+}
+
+// PNBP Semua Kategori perbulantahun
+type PnbpAllKategoriPerbulanTahun struct {
+	Periode     string `json:"periode"`
+	Visa        int64  `json:"visa"`
+	Paspor      int64  `json:"paspor"`
+	IzinTinggal int64  `json:"izin_tinggal"`
+	PnbpLainnya int64  `json:"pnbp_lainnya"`
 }

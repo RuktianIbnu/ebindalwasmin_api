@@ -8,7 +8,6 @@ import (
 	pnbph "ebindalwasmin_api/handler/pnbp"
 	uh "ebindalwasmin_api/handler/user"
 	vh "ebindalwasmin_api/handler/visa"
-	"ebindalwasmin_api/middleware/auth"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -38,16 +37,23 @@ func Routes() *gin.Engine {
 	{
 		v1.POST("/login", generalHandler.Login)
 
-		resources := v1.Group("/resources").Use(auth.Middleware())
+		resources := v1.Group("/resources")
 		{
 			resources.GET("/user/:id", userHandler.GetOneByID)
 
 			resources.GET("/kategori-pnbp", kategoriPNBPHandler.GetAllByParent)
 
 			resources.GET("/paspor-by/:tanggal", pasporHandler.GetAllByDate)
-			resources.GET("/visa-by/:tanggal", visaHandler.GetAllByDate)
+			resources.GET("/paspor-pivot-perwilayah", pasporHandler.GetPivotPerwilayah)
+			resources.GET("/paspor-byKelaminPer10hari/", pasporHandler.GetKelaminPer10hari)
+
+			resources.GET("/visa-by/tanggal", visaHandler.GetAllByDate)
+			//resources.GET("/visa-by/:variable/:value", visaHandler.GetAllByDate)
+
 			resources.GET("/intal-by/:tanggal", intalHandler.GetAllByDate)
+
 			resources.GET("/pnbp-by/:tanggal", pnbpHandler.GetAllByDate)
+			resources.GET("/pnbp-perbulantahun", pnbpHandler.GetAllkategoriPNBPPerbulanTahun)
 		}
 	}
 

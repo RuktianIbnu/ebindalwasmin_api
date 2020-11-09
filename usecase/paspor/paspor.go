@@ -12,6 +12,8 @@ type Usecase interface {
 	// UpdateOneByID(data *model.User) (rowsAffected int64, err error)
 	// GetOneByID(id int64) (result *model.User, err error)
 	GetAllByDate(date int64) (result []*model.Paspor, err error)
+	GetPivotPerwilayah() (result []*model.PasporPivotPerwilayah, err error)
+	GetKelaminPer10hari(date1 int64, date2 int64) (result []*model.PasporPermohonanperKelaminPer10hari, err error)
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
 
@@ -52,6 +54,14 @@ func NewUsecase() Usecase {
 
 func (m *usecase) GetAllByDate(date int64) (result []*model.Paspor, err error) {
 	return m.pasporRepo.GetAllByDate(date)
+}
+
+func (m *usecase) GetPivotPerwilayah() (result []*model.PasporPivotPerwilayah, err error) {
+	return m.pasporRepo.GetPivotPerwilayah()
+}
+
+func (m *usecase) GetKelaminPer10hari(date1 int64, date2 int64) (result []*model.PasporPermohonanperKelaminPer10hari, err error) {
+	return m.pasporRepo.GetKelaminPer10hari(date1, date2)
 }
 
 // func (m *usecase) DeleteOneByID(id int64) (rowsAffected int64, err error) {
