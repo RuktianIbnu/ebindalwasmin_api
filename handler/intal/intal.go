@@ -16,6 +16,8 @@ type Handler interface {
 	// UpdateOneByID(c *gin.Context)
 	// GetOneByID(c *gin.Context)
 	GetAllByDate(c *gin.Context)
+	GetPivotPerwilayah(c *gin.Context)
+	GetKelaminPer10hari(c *gin.Context)
 	// DeleteOneByID(c *gin.Context)
 }
 
@@ -105,6 +107,40 @@ func (m *handler) GetAllByDate(c *gin.Context) {
 
 	log.Println(tm.Unix())
 	list, err := m.intalUsecase.GetAllByDate(tm.Unix())
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, resp.Format(500, err))
+		return
+	}
+
+	c.JSON(http.StatusOK, resp.Format(200, nil, list))
+}
+
+func (m *handler) GetPivotPerwilayah(c *gin.Context) {
+	list, err := m.intalUsecase.GetPivotPerwilayah()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, resp.Format(500, err))
+		return
+	}
+
+	c.JSON(http.StatusOK, resp.Format(200, nil, list))
+}
+
+func (m *handler) GetKelaminPer10hari(c *gin.Context) {
+	type Tgl struct {
+		TanggalAwal  string `json:"tanggal_awal"`
+		TanggalAkhir string `json:"tanggal_akhir"`
+	}
+	var (
+		date Tgl
+	)
+
+	c.ShouldBindJSON(&date)
+
+	date1, _ := time.Parse("2006-01-02", date.TanggalAwal)
+	date2, _ := time.Parse("2006-01-02", date.TanggalAkhir)
+
+	log.Println(date1.Unix(), date2.Unix())
+	list, err := m.intalUsecase.GetKelaminPer10hari(date1.Unix(), date2.Unix())
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, resp.Format(500, err))
 		return

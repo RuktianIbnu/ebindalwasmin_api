@@ -116,16 +116,6 @@ func (m *handler) GetAllByDate(c *gin.Context) {
 }
 
 func (m *handler) GetPivotPerwilayah(c *gin.Context) {
-	// var (
-	// 	limit, _ = strconv.Atoi(c.DefaultQuery("limit", "10"))
-	// 	page, _  = strconv.Atoi(c.DefaultQuery("page", "1"))
-	// 	search   = c.Query("search")
-	// )
-	// var (
-	// 	tm, _ = time.Parse("2006-01-02", c.Param("tanggal"))
-	// )
-
-	//log.Println(tm.Unix())
 	list, err := m.pasporUsecase.GetPivotPerwilayah()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, resp.Format(500, err))
@@ -136,15 +126,18 @@ func (m *handler) GetPivotPerwilayah(c *gin.Context) {
 }
 
 func (m *handler) GetKelaminPer10hari(c *gin.Context) {
-	// var (
-	// 	limit, _ = strconv.Atoi(c.DefaultQuery("limit", "10"))
-	// 	page, _  = strconv.Atoi(c.DefaultQuery("page", "1"))
-	// 	search   = c.Query("search")
-	// )
+	type Tgl struct {
+		TanggalAwal  string `json:"tanggal_awal"`
+		TanggalAkhir string `json:"tanggal_akhir"`
+	}
 	var (
-		date1, _ = time.Parse("2006-01-02", c.Param("tanggal_awal"))
-		date2, _ = time.Parse("2006-01-02", c.Param("tanggal_akhir"))
+		date Tgl
 	)
+
+	c.ShouldBindJSON(&date)
+
+	date1, _ := time.Parse("2006-01-02", date.TanggalAwal)
+	date2, _ := time.Parse("2006-01-02", date.TanggalAkhir)
 
 	log.Println(date1.Unix(), date2.Unix())
 	list, err := m.pasporUsecase.GetKelaminPer10hari(date1.Unix(), date2.Unix())

@@ -17,6 +17,7 @@ type Handler interface {
 	// GetOneByID(c *gin.Context)
 	GetAllByDate(c *gin.Context)
 	GetAllkategoriPNBPPerbulanTahun(c *gin.Context)
+	GetTotalPnbp(c *gin.Context)
 	// DeleteOneByID(c *gin.Context)
 }
 
@@ -115,17 +116,17 @@ func (m *handler) GetAllByDate(c *gin.Context) {
 }
 
 func (m *handler) GetAllkategoriPNBPPerbulanTahun(c *gin.Context) {
-	// var (
-	// 	limit, _ = strconv.Atoi(c.DefaultQuery("limit", "10"))
-	// 	page, _  = strconv.Atoi(c.DefaultQuery("page", "1"))
-	// 	search   = c.Query("search")
-	// )
-	// var (
-	// 	tm, _ = time.Parse("2006-01-02", c.Param("tanggal"))
-	// )
-
-	//log.Println(tm.Unix())
 	list, err := m.pnbpUsecase.GetAllkategoriPNBPPerbulanTahun()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, resp.Format(500, err))
+		return
+	}
+
+	c.JSON(http.StatusOK, resp.Format(200, nil, list))
+}
+
+func (m *handler) GetTotalPnbp(c *gin.Context) {
+	list, err := m.pnbpUsecase.GetTotalPnbp()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, resp.Format(500, err))
 		return

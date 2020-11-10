@@ -14,6 +14,8 @@ type Repository interface {
 	// GetOneByID(id int64) (*model.User, error)
 	// GetUserPasswordByEmail(email string) (int64, string, error)
 	GetAllByDate(date int64) (result []*model.Intal, err error)
+	GetPivotPerwilayah() (result []*model.PasporPivotPerwilayah, err error)
+	GetKelaminPer10hari(date1 int64, date2 int64) (result []*model.IntalPermohonanperKelaminPer10hari, err error)
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
 
@@ -190,6 +192,101 @@ func (m *repository) GetAllByDate(date int64) (result []*model.Intal, err error)
 		list = append(list, &data)
 	}
 	log.Println(list, date)
+
+	return list, nil
+}
+
+func (m *repository) GetPivotPerwilayah() (result []*model.PasporPivotPerwilayah, err error) {
+	query := `select 
+	coalesce(periode, ''), 
+	coalesce(kab_bangka, 0), 
+	coalesce(kab_bangka_barat, 0), 
+	coalesce(kab_bangka_selatan, 0), 
+	coalesce(kab_bangka_tengah, 0), 
+	coalesce(pangkal_pinang, 0),
+	coalesce(kab_belitung_timur, 0), 
+	coalesce(kab_belitung, 0), 
+	coalesce(kab_lainnya_1, 0), 
+	coalesce(kab_lainnya_2, 0)
+	from intal_pivot_wilayah`
+
+	var (
+		list = make([]*model.PasporPivotPerwilayah, 0)
+	)
+
+	rows, err := m.DB.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			data model.PasporPivotPerwilayah
+		)
+
+		if err := rows.Scan(
+			&data.Periode,
+			&data.KabBangka,
+			&data.KabBangkaBarat,
+			&data.KabBangkaSelatan,
+			&data.KabBangkaTengah,
+			&data.PangkalPinang,
+			&data.KabBelitungTimur,
+			&data.KabBelitung,
+			&data.KabLainnya1,
+			&data.KabLainnya2,
+		); err != nil {
+			return nil, err
+		}
+
+		list = append(list, &data)
+	}
+	log.Println(list)
+
+	return list, nil
+}
+
+func (m *repository) GetKelaminPer10hari(date1 int64, date2 int64) (result []*model.IntalPermohonanperKelaminPer10hari, err error) {
+	query := `select 
+	coalesce(izintinggal, 0), 
+	coalesce(laki, 0), 
+	coalesce(perempuan, 0),
+	tanggal, 
+	coalesce(id_wilayah_kerja, 0), 
+	coalesce(id_kantor, 0)
+	from izintinggal where tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d')`
+
+	var (
+		list = make([]*model.IntalPermohonanperKelaminPer10hari, 0)
+	)
+
+	//log.Println(date1, date2)
+	rows, err := m.DB.Query(query, date1, date2)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			data model.IntalPermohonanperKelaminPer10hari
+		)
+
+		if err := rows.Scan(
+			&data.IzinTinggal,
+			&data.Laki,
+			&data.Perempuan,
+			&data.Tanggal,
+			&data.IDWilayahKerja,
+			&data.IDKantor,
+		); err != nil {
+			return nil, err
+		}
+
+		list = append(list, &data)
+	}
+	log.Println(date1, date2)
 
 	return list, nil
 }

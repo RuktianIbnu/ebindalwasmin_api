@@ -41,8 +41,6 @@ func Routes() *gin.Engine {
 		{
 			resources.GET("/user/:id", userHandler.GetOneByID)
 
-			resources.GET("/kategori-pnbp", kategoriPNBPHandler.GetAllByParent)
-
 			resources.GET("/paspor-by/:tanggal", pasporHandler.GetAllByDate)
 			resources.GET("/paspor-pivot-perwilayah", pasporHandler.GetPivotPerwilayah)
 			resources.GET("/paspor-byKelaminPer10hari/", pasporHandler.GetKelaminPer10hari)
@@ -51,9 +49,13 @@ func Routes() *gin.Engine {
 			//resources.GET("/visa-by/:variable/:value", visaHandler.GetAllByDate)
 
 			resources.GET("/intal-by/:tanggal", intalHandler.GetAllByDate)
+			resources.GET("/intal-pivot-perwilayah", intalHandler.GetPivotPerwilayah)
+			resources.GET("/intal-byKelaminPer10hari/", intalHandler.GetKelaminPer10hari)
 
+			resources.GET("/pnbp-kategori", kategoriPNBPHandler.GetAllByParent)
 			resources.GET("/pnbp-by/:tanggal", pnbpHandler.GetAllByDate)
 			resources.GET("/pnbp-perbulantahun", pnbpHandler.GetAllkategoriPNBPPerbulanTahun)
+			resources.GET("/pnbp-total", pnbpHandler.GetTotalPnbp)
 		}
 	}
 

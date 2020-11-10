@@ -101,6 +101,16 @@ type Intal struct {
 	IDWilayahKerja int64      `json:"id_wilayah_kerja,omitempty"`
 }
 
+// Intal Permohonan perkelamin per 10 hari...
+type IntalPermohonanperKelaminPer10hari struct {
+	IzinTinggal    int64      `json:"izintinggal"`
+	Laki           int64      `json:"laki"`
+	Perempuan      int64      `json:"perempuan"`
+	Tanggal        *time.Time `json:"tanggal"`
+	IDWilayahKerja int64      `json:"id_wilayah_kerja,omitempty"`
+	IDKantor       int64      `json:"id_kantor,omitempty"`
+}
+
 // Pnbp ...
 type Pnbp struct {
 	ID             int64      `json:"id"`
@@ -121,4 +131,14 @@ type PnbpAllKategoriPerbulanTahun struct {
 	Paspor      int64  `json:"paspor"`
 	IzinTinggal int64  `json:"izin_tinggal"`
 	PnbpLainnya int64  `json:"pnbp_lainnya"`
+}
+
+// PNBP get total PNBP
+type PnbpGetTotalPnbp struct {
+	Periode     string `json:"periode"`
+	Visa        int64  `json:"visa"`
+	Paspor      int64  `json:"paspor"`
+	IzinTinggal int64  `json:"izin_tinggal"`
+	PnbpLainnya int64  `json:"pnbp_lainnya"`
+	Total       int64  `json:"total"`
 }

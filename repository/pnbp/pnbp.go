@@ -15,6 +15,7 @@ type Repository interface {
 	// GetUserPasswordByEmail(email string) (int64, string, error)
 	GetAllByDate(date int64) (result []*model.Pnbp, err error)
 	GetAllkategoriPNBPPerbulanTahun() (result []*model.PnbpAllKategoriPerbulanTahun, err error)
+	GetTotalPnbp() (result []*model.PnbpGetTotalPnbp, err error)
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
 
@@ -232,6 +233,48 @@ func (m *repository) GetAllkategoriPNBPPerbulanTahun() (result []*model.PnbpAllK
 		list = append(list, &data)
 	}
 	log.Println(list)
+
+	return list, nil
+}
+
+func (m *repository) GetTotalPnbp() (result []*model.PnbpGetTotalPnbp, err error) {
+	query := `SELECT 
+	coalesce(periode, ''), 
+	coalesce(visa, 0), 
+	coalesce(paspor, 0), 
+	coalesce(izintinggal, 0), 
+	coalesce(pnbplainnya, 0), 
+	paspor + izintinggal + pnbplainnya AS 'total' FROM groupbymonthyear`
+
+	var (
+		list = make([]*model.PnbpGetTotalPnbp, 0)
+	)
+
+	rows, err := m.DB.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			data model.PnbpGetTotalPnbp
+		)
+
+		if err := rows.Scan(
+			&data.Periode,
+			&data.Visa,
+			&data.Paspor,
+			&data.IzinTinggal,
+			&data.PnbpLainnya,
+			&data.Total,
+		); err != nil {
+			return nil, err
+		}
+
+		list = append(list, &data)
+	}
+	//log.Println(list, date)
 
 	return list, nil
 }

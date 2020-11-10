@@ -255,7 +255,7 @@ func (m *repository) GetKelaminPer10hari(date1 int64, date2 int64) (result []*mo
 	tanggal, 
 	coalesce(id_wilayah_kerja, 0), 
 	coalesce(id_kantor, 0)
-	from paspor where tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d' AND  ?, '%Y-%m-%d')`
+	from paspor where tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d')`
 
 	var (
 		list = make([]*model.PasporPermohonanperKelaminPer10hari, 0)
@@ -286,7 +286,7 @@ func (m *repository) GetKelaminPer10hari(date1 int64, date2 int64) (result []*mo
 
 		list = append(list, &data)
 	}
-	//log.Println(list, date)
+	log.Println(date1, date2)
 
 	return list, nil
 }
