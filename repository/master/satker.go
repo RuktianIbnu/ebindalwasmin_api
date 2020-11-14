@@ -148,7 +148,7 @@ func NewRepository() Repository {
 func (m *repository) GetAllSatker() (result []*model.Satker, err error) {
 	query := `select 
 	coalesce(id_kantor, 0), 
-	coalesce(nama_satker, 0)
+	coalesce(nama_kantor, 0)
 	from kantor`
 
 	var (
