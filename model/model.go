@@ -2,6 +2,12 @@ package model
 
 import "time"
 
+// Satker ...
+type Satker struct {
+	IDKantor    int64  `json:"id_kantor"`
+	Nama_Kantor string `json:"nama_kantor"`
+}
+
 // User ...
 type User struct {
 	ID               int64      `json:"id"`

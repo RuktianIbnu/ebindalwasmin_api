@@ -4,6 +4,7 @@ import (
 	gh "ebindalwasmin_api/handler/general"
 	ih "ebindalwasmin_api/handler/intal"
 	kh "ebindalwasmin_api/handler/kategoripnbp"
+	sh "ebindalwasmin_api/handler/master"
 	ph "ebindalwasmin_api/handler/paspor"
 	pnbph "ebindalwasmin_api/handler/pnbp"
 	uh "ebindalwasmin_api/handler/user"
@@ -32,6 +33,7 @@ func Routes() *gin.Engine {
 	visaHandler := vh.NewHandler()
 	intalHandler := ih.NewHandler()
 	pnbpHandler := pnbph.NewHandler()
+	satkerHandler := sh.NewHandler()
 
 	v1 := r.Group("/v1")
 	{
@@ -40,6 +42,7 @@ func Routes() *gin.Engine {
 		resources := v1.Group("/resources")
 		{
 			resources.GET("/user/:id", userHandler.GetOneByID)
+			resources.GET("/satker", satkerHandler.GetAllSatker)
 
 			resources.GET("/paspor-by/:tanggal", pasporHandler.GetAllByDate)
 			resources.GET("/paspor-pivot-perwilayah", pasporHandler.GetPivotPerwilayah)
