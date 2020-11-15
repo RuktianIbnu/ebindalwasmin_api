@@ -12,6 +12,8 @@ type Usecase interface {
 	// UpdateOneByID(data *model.User) (rowsAffected int64, err error)
 	// GetOneByID(id int64) (result *model.User, err error)
 	GetAllSatker() (result []*model.Satker, err error)
+	GetDataReportMonthYear(layanan string) (result []*model.ReportMonthYear, err error)
+	GetDataReportMonthYearAll(layanan string) (result []*model.ReportMonthYearAll, err error)
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
 
@@ -52,6 +54,14 @@ func NewUsecase() Usecase {
 
 func (m *usecase) GetAllSatker() (result []*model.Satker, err error) {
 	return m.satkerRepo.GetAllSatker()
+}
+
+func (m *usecase) GetDataReportMonthYearAll(layanan string) (result []*model.ReportMonthYearAll, err error) {
+	return m.satkerRepo.GetDataReportMonthYearAll(layanan)
+}
+
+func (m *usecase) GetDataReportMonthYear(layanan string) (result []*model.ReportMonthYear, err error) {
+	return m.satkerRepo.GetDataReportMonthYear(layanan)
 }
 
 // func (m *usecase) DeleteOneByID(id int64) (rowsAffected int64, err error) {

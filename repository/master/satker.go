@@ -14,6 +14,8 @@ type Repository interface {
 	// GetOneByID(id int64) (*model.User, error)
 	// GetUserPasswordByEmail(email string) (int64, string, error)
 	GetAllSatker() (result []*model.Satker, err error)
+	GetDataReportMonthYear(layanan string) (result []*model.ReportMonthYear, err error)
+	GetDataReportMonthYearAll(layanan string) (result []*model.ReportMonthYearAll, err error)
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
 
@@ -177,6 +179,101 @@ func (m *repository) GetAllSatker() (result []*model.Satker, err error) {
 	}
 	log.Println(list)
 
+	return list, nil
+}
+
+func (m *repository) GetDataReportMonthYear(layanan string) (result []*model.ReportMonthYear, err error) {
+	var query string
+	switch layanan {
+	case "paspor":
+		query = `select 
+		coalesce(periode, ''),
+		coalesce(paspor, 0)
+		from groupbymonthyear`
+	case "visa":
+		query = `select 
+		coalesce(periode, ''), 
+		coalesce(visa, 0)
+		from groupbymonthyear`
+	case "izintinggal":
+		query = `select 
+		coalesce(periode, ''),
+		coalesce(izintinggal, 0)
+		from groupbymonthyear`
+	case "pnbplainnya":
+		query = `select 
+		coalesce(periode, ''),
+		coalesce(pnbplainnya, 0)
+		from groupbymonthyear`
+	}
+
+	var (
+		list = make([]*model.ReportMonthYear, 0)
+	)
+
+	rows, err := m.DB.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			data model.ReportMonthYear
+		)
+
+		if err := rows.Scan(
+			&data.Periode,
+			&data.Total,
+		); err != nil {
+			return nil, err
+		}
+		data.NamaLayanan = layanan
+		list = append(list, &data)
+	}
+	log.Println(layanan)
+	return list, nil
+}
+
+func (m *repository) GetDataReportMonthYearAll(layanan string) (result []*model.ReportMonthYearAll, err error) {
+	var query string
+	switch layanan {
+	case "all":
+		query = `select 
+		coalesce(periode, ''),
+		coalesce(visa, 0), 
+		coalesce(paspor, 0),
+		coalesce(izintinggal, 0), 
+		coalesce(pnbplainnya, 0)
+		from groupbymonthyear`
+	}
+
+	var (
+		list = make([]*model.ReportMonthYearAll, 0)
+	)
+
+	rows, err := m.DB.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			data model.ReportMonthYearAll
+		)
+
+		if err := rows.Scan(
+			&data.Periode,
+			&data.Visa,
+			&data.Paspor,
+			&data.IzinTinggal,
+			&data.PnbpLainnya,
+		); err != nil {
+			return nil, err
+		}
+		list = append(list, &data)
+	}
 	return list, nil
 }
 

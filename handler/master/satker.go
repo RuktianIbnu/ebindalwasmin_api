@@ -3,7 +3,9 @@ package master
 import (
 	resp "ebindalwasmin_api/helpers/response"
 	su "ebindalwasmin_api/usecase/master"
+	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,6 +16,7 @@ type Handler interface {
 	// UpdateOneByID(c *gin.Context)
 	// GetOneByID(c *gin.Context)
 	GetAllSatker(c *gin.Context)
+	GetReportMonthYear(c *gin.Context)
 	// DeleteOneByID(c *gin.Context)
 }
 
@@ -99,6 +102,66 @@ func (m *handler) GetAllSatker(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, resp.Format(200, nil, list))
+}
+
+func (m *handler) GetReportMonthYear(c *gin.Context) {
+	type Body struct {
+		Cekbox  string `json:"cekbox"`
+		IDJenis string `json:"id_jenis"`
+	}
+	var (
+		body Body
+	)
+	c.ShouldBindJSON(&body)
+	// tm_awal, _   = time.Parse("2006-01-02", c.Param("tanggal_awal"))
+	// tm_akhir, _  = time.Parse("2006-01-02", c.Param("tanggal_akhir"))
+	cekbox, _ := strconv.ParseBool(body.Cekbox)
+	id_jenis := body.IDJenis
+
+	//id_satker    = c.Param("id_satker")
+
+	log.Println(cekbox, id_jenis)
+	if cekbox == true {
+		switch id_jenis {
+		case "all":
+			list, err := m.satkerUsecase.GetDataReportMonthYearAll("all")
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, resp.Format(500, err))
+				return
+			}
+			c.JSON(http.StatusOK, resp.Format(200, nil, list))
+		case "1":
+			list, err := m.satkerUsecase.GetDataReportMonthYear("visa")
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, resp.Format(500, err))
+				return
+			}
+			c.JSON(http.StatusOK, resp.Format(200, nil, list))
+		case "2":
+			list, err := m.satkerUsecase.GetDataReportMonthYear("paspor")
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, resp.Format(500, err))
+				return
+			}
+			c.JSON(http.StatusOK, resp.Format(200, nil, list))
+		case "3":
+			list, err := m.satkerUsecase.GetDataReportMonthYear("izintinggal")
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, resp.Format(500, err))
+				return
+			}
+			c.JSON(http.StatusOK, resp.Format(200, nil, list))
+		case "4":
+			list, err := m.satkerUsecase.GetDataReportMonthYear("pnbplainnya")
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, resp.Format(500, err))
+				return
+			}
+			c.JSON(http.StatusOK, resp.Format(200, nil, list))
+		}
+	} else {
+
+	}
 }
 
 // func (m *handler) DeleteOneByID(c *gin.Context) {

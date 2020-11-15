@@ -8,6 +8,22 @@ type Satker struct {
 	Nama_Kantor string `json:"nama_kantor"`
 }
 
+// Report monthyear ...
+type ReportMonthYear struct {
+	Periode     string `json:"periode"`
+	NamaLayanan string `json:"nama_layanan"`
+	Total       int64  `json:"total"`
+}
+
+// Report monthyear ...
+type ReportMonthYearAll struct {
+	Periode     string `json:"periode"`
+	Visa        int64  `json:"visa"`
+	Paspor      int64  `json:"paspor"`
+	IzinTinggal int64  `json:"izintinggal"`
+	PnbpLainnya int64  `json:"pnbplainnya"`
+}
+
 // User ...
 type User struct {
 	ID               int64      `json:"id"`
