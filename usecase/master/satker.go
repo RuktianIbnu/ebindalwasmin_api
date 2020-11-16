@@ -12,8 +12,7 @@ type Usecase interface {
 	// UpdateOneByID(data *model.User) (rowsAffected int64, err error)
 	// GetOneByID(id int64) (result *model.User, err error)
 	GetAllSatker() (result []*model.Satker, err error)
-	GetDataReportMonthYear(layanan string) (result []*model.ReportMonthYear, err error)
-	GetDataReportMonthYearAll(layanan string) (result []*model.ReportMonthYearAll, err error)
+	GetReportMonthYear(tm_awal int64, tm_akhir int64, cekbox bool, id_jenis int64, id_satker int64) (result []*model.ReportMonthYear, err error)
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
 
@@ -56,12 +55,19 @@ func (m *usecase) GetAllSatker() (result []*model.Satker, err error) {
 	return m.satkerRepo.GetAllSatker()
 }
 
-func (m *usecase) GetDataReportMonthYearAll(layanan string) (result []*model.ReportMonthYearAll, err error) {
-	return m.satkerRepo.GetDataReportMonthYearAll(layanan)
-}
+func (m *usecase) GetReportMonthYear(tgl_awal int64, tgl_akhir int64, cekbox bool, id_jenis int64, id_satker int64) (result []*model.ReportMonthYear, err error) {
 
-func (m *usecase) GetDataReportMonthYear(layanan string) (result []*model.ReportMonthYear, err error) {
-	return m.satkerRepo.GetDataReportMonthYear(layanan)
+	if cekbox == true && id_jenis == 0 && id_satker == 0 {
+		return m.satkerRepo.GetReportMonthYear(tgl_awal, tgl_akhir, cekbox, id_jenis, id_satker)
+	} else if cekbox == true && id_jenis == 0 && id_satker != 0 {
+		return m.satkerRepo.GetReportMonthYearWithIdSatker(tgl_awal, tgl_akhir, cekbox, id_jenis, id_satker)
+	} else if cekbox == true && id_jenis != 0 && id_satker == 0 {
+		return m.satkerRepo.GetReportMonthYearWithIdJenis(tgl_awal, tgl_akhir, cekbox, id_jenis, id_satker)
+	} else if cekbox == true && id_jenis != 0 && id_satker != 0 {
+		return m.satkerRepo.GetReportMonthYearWithIdSatkerAndIdJenis(tgl_awal, tgl_akhir, cekbox, id_jenis, id_satker)
+	}
+
+	return
 }
 
 // func (m *usecase) DeleteOneByID(id int64) (rowsAffected int64, err error) {
