@@ -411,7 +411,8 @@ func (m *repository) GetReportDateWithIdSatker(tgl_awal int64, tgl_akhir int64, 
 		)
 
 		if err := rows.Scan(
-			&data.Periode,
+			&data.JenisPnbp,
+			&data.Tanggal,
 			&data.Total,
 		); err != nil {
 			return nil, err
@@ -424,6 +425,7 @@ func (m *repository) GetReportDateWithIdSatker(tgl_awal int64, tgl_akhir int64, 
 func (m *repository) GetReportDateWithIdJenis(tgl_awal int64, tgl_akhir int64, cekbox bool, id_jenis int64, id_satker int64) (result []*model.ReportMonthYear, err error) {
 	var query string
 
+	log.Println(cekbox, id_jenis, id_satker, tgl_awal, tgl_akhir)
 	if cekbox == false && id_jenis != 0 && id_satker == 0 {
 		switch id_jenis {
 		case 1: // paspor ...
@@ -454,7 +456,7 @@ func (m *repository) GetReportDateWithIdJenis(tgl_awal int64, tgl_akhir int64, c
 		list = make([]*model.ReportMonthYear, 0)
 	)
 
-	rows, err := m.DB.Query(query)
+	rows, err := m.DB.Query(query, tgl_awal, tgl_akhir)
 	if err != nil {
 		return nil, err
 	}
@@ -466,7 +468,8 @@ func (m *repository) GetReportDateWithIdJenis(tgl_awal int64, tgl_akhir int64, c
 		)
 
 		if err := rows.Scan(
-			&data.Periode,
+			&data.JenisPnbp,
+			&data.Tanggal,
 			&data.Total,
 		); err != nil {
 			return nil, err
@@ -508,7 +511,7 @@ func (m *repository) GetReportDateWithIdSatkerAndIdJenis(tgl_awal int64, tgl_akh
 		list = make([]*model.ReportMonthYear, 0)
 	)
 
-	rows, err := m.DB.Query(query, id_satker)
+	rows, err := m.DB.Query(query, tgl_awal, tgl_akhir, id_satker)
 	if err != nil {
 		return nil, err
 	}
@@ -520,7 +523,8 @@ func (m *repository) GetReportDateWithIdSatkerAndIdJenis(tgl_awal int64, tgl_akh
 		)
 
 		if err := rows.Scan(
-			&data.Periode,
+			&data.JenisPnbp,
+			&data.Tanggal,
 			&data.Total,
 		); err != nil {
 			return nil, err
