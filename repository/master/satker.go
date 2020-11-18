@@ -18,6 +18,12 @@ type Repository interface {
 	GetReportMonthYearWithIdSatker(tgl_awal int64, tgl_akhir int64, cekbox bool, id_jenis int64, id_satker int64) (result []*model.ReportMonthYear, err error)
 	GetReportMonthYearWithIdJenis(tgl_awal int64, tgl_akhir int64, cekbox bool, id_jenis int64, id_satker int64) (result []*model.ReportMonthYear, err error)
 	GetReportMonthYearWithIdSatkerAndIdJenis(tgl_awal int64, tgl_akhir int64, cekbox bool, id_jenis int64, id_satker int64) (result []*model.ReportMonthYear, err error)
+
+	GetReportDateAll(tgl_awal int64, tgl_akhir int64) (result []*model.ReportMonthYear, err error)
+	GetReportDateWithIdSatker(tgl_awal int64, tgl_akhir int64, cekbox bool, id_jenis int64, id_satker int64) (result []*model.ReportMonthYear, err error)
+	GetReportDateWithIdJenis(tgl_awal int64, tgl_akhir int64, cekbox bool, id_jenis int64, id_satker int64) (result []*model.ReportMonthYear, err error)
+	GetReportDateWithIdSatkerAndIdJenis(tgl_awal int64, tgl_akhir int64, cekbox bool, id_jenis int64, id_satker int64) (result []*model.ReportMonthYear, err error)
+
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
 
@@ -316,6 +322,185 @@ func (m *repository) GetReportMonthYearWithIdSatkerAndIdJenis(tgl_awal int64, tg
 		case 4: // pnbp lainnya ...
 			query = `SELECT concat(MONTHNAME(tanggal),' ',YEAR(tanggal)) AS periode, SUM(total) AS total 
 				from data_pnbplainnya where id_kantor = ? GROUP BY periode`
+		}
+	}
+
+	var (
+		list = make([]*model.ReportMonthYear, 0)
+	)
+
+	rows, err := m.DB.Query(query, id_satker)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			data model.ReportMonthYear
+		)
+
+		if err := rows.Scan(
+			&data.Periode,
+			&data.Total,
+		); err != nil {
+			return nil, err
+		}
+		list = append(list, &data)
+	}
+	return list, nil
+}
+
+func (m *repository) GetReportDateAll(tgl_awal int64, tgl_akhir int64) (result []*model.ReportMonthYear, err error) {
+	var query string
+
+	if tgl_awal != 0 && tgl_akhir != 0 {
+		query = `SELECT jenispnbp, tanggal, total 
+		from merge_table_pelayanan where tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d')`
+	}
+
+	var (
+		list = make([]*model.ReportMonthYear, 0)
+	)
+
+	rows, err := m.DB.Query(query, tgl_awal, tgl_akhir)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			data model.ReportMonthYear
+		)
+
+		if err := rows.Scan(
+			&data.JenisPnbp,
+			&data.Tanggal,
+			&data.Total,
+		); err != nil {
+			return nil, err
+		}
+		list = append(list, &data)
+	}
+	return list, nil
+}
+
+func (m *repository) GetReportDateWithIdSatker(tgl_awal int64, tgl_akhir int64, cekbox bool, id_jenis int64, id_satker int64) (result []*model.ReportMonthYear, err error) {
+	var query string
+
+	if cekbox == true && id_jenis == 0 && id_satker != 0 {
+		query = `SELECT k.nama_layanan AS jenispnbp, p.tanggal, p.total 
+		from data_izinkeimigrasian AS p 
+		INNER JOIN kategoripnbps AS k ON k.id = p.id_jenis 
+		where tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d') AND id_satker = ?`
+	}
+	var (
+		list = make([]*model.ReportMonthYear, 0)
+	)
+
+	rows, err := m.DB.Query(query, tgl_awal, tgl_akhir, id_satker)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			data model.ReportMonthYear
+		)
+
+		if err := rows.Scan(
+			&data.Periode,
+			&data.Total,
+		); err != nil {
+			return nil, err
+		}
+		list = append(list, &data)
+	}
+	return list, nil
+}
+
+func (m *repository) GetReportDateWithIdJenis(tgl_awal int64, tgl_akhir int64, cekbox bool, id_jenis int64, id_satker int64) (result []*model.ReportMonthYear, err error) {
+	var query string
+
+	if cekbox == false && id_jenis != 0 && id_satker == 0 {
+		switch id_jenis {
+		case 1: // paspor ...
+			query = `SELECT k.nama_layanan AS jenispnbp, p.tanggal, p.total 
+			from data_paspor AS p 
+			INNER JOIN kategoripnbps AS k ON k.id = p.id_jenis 
+			where tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d')
+			`
+		case 2: // visa ...
+			query = `SELECT k.nama_layanan AS jenispnbp, p.tanggal, p.total 
+			from data_visa AS p 
+			INNER JOIN kategoripnbps AS k ON k.id = p.id_jenis 
+			where tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d')`
+		case 3: // intal ...
+			query = `SELECT k.nama_layanan AS jenispnbp, p.tanggal, p.total 
+			from data_izinkeimigrasian AS p 
+			INNER JOIN kategoripnbps AS k ON k.id = p.id_jenis
+			where tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d')`
+		case 4: // pnbp lainnya ...
+			query = `SELECT k.nama_layanan AS jenispnbp, p.tanggal, p.total 
+			from data_pnbplainnya AS p 
+			INNER JOIN kategoripnbps AS k ON k.id = p.id_jenis
+			where tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d')`
+		}
+	}
+
+	var (
+		list = make([]*model.ReportMonthYear, 0)
+	)
+
+	rows, err := m.DB.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			data model.ReportMonthYear
+		)
+
+		if err := rows.Scan(
+			&data.Periode,
+			&data.Total,
+		); err != nil {
+			return nil, err
+		}
+		list = append(list, &data)
+	}
+	return list, nil
+}
+
+func (m *repository) GetReportDateWithIdSatkerAndIdJenis(tgl_awal int64, tgl_akhir int64, cekbox bool, id_jenis int64, id_satker int64) (result []*model.ReportMonthYear, err error) {
+	var query string
+
+	if cekbox == false && id_jenis != 0 && id_satker != 0 {
+		switch id_jenis {
+		case 1: // paspor ...
+			query = `SELECT k.nama_layanan AS jenispnbp, p.tanggal, p.total 
+			from data_paspor AS p 
+			INNER JOIN kategoripnbps AS k ON k.id = p.id_jenis
+			where tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d') AND id_kantor = ?`
+		case 2: // visa ...
+			query = `SELECT k.nama_layanan AS jenispnbp, p.tanggal, p.total 
+			from data_visa AS p 
+			INNER JOIN kategoripnbps AS k ON k.id = p.id_jenis
+			where tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d') AND id_kantor = ?`
+		case 3: // intal ...
+			query = `SELECT k.nama_layanan AS jenispnbp, p.tanggal, p.total 
+			from data_izinkeimigrasian AS p 
+			INNER JOIN kategoripnbps AS k ON k.id = p.id_jenis 
+			where tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d') AND id_kantor = ?`
+		case 4: // pnbp lainnya ...
+			query = `SELECT k.nama_layanan AS jenispnbp, p.tanggal, p.total 
+			from data_pnbplainnnya AS p 
+			INNER JOIN kategoripnbps AS k ON k.id = p.id_jenis
+			where tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d') AND id_kantor = ?`
 		}
 	}
 

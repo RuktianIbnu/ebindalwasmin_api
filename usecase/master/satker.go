@@ -65,6 +65,14 @@ func (m *usecase) GetReportMonthYear(tgl_awal int64, tgl_akhir int64, cekbox boo
 		return m.satkerRepo.GetReportMonthYearWithIdJenis(tgl_awal, tgl_akhir, cekbox, id_jenis, id_satker)
 	} else if cekbox == true && id_jenis != 0 && id_satker != 0 {
 		return m.satkerRepo.GetReportMonthYearWithIdSatkerAndIdJenis(tgl_awal, tgl_akhir, cekbox, id_jenis, id_satker)
+	} else if cekbox == false && id_jenis == 0 && id_satker == 0 {
+		return m.satkerRepo.GetReportDateAll(tgl_awal, tgl_akhir)
+	} else if cekbox == true && id_jenis == 0 && id_satker != 0 {
+		return m.satkerRepo.GetReportDateWithIdSatker(tgl_awal, tgl_akhir, cekbox, id_jenis, id_satker)
+	} else if cekbox == true && id_jenis != 0 && id_satker == 0 {
+		return m.satkerRepo.GetReportDateWithIdJenis(tgl_awal, tgl_akhir, cekbox, id_jenis, id_satker)
+	} else if cekbox == true && id_jenis != 0 && id_satker != 0 {
+		return m.satkerRepo.GetReportDateWithIdSatkerAndIdJenis(tgl_awal, tgl_akhir, cekbox, id_jenis, id_satker)
 	}
 
 	return
