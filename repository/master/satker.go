@@ -231,7 +231,7 @@ func (m *repository) GetReportMonthYearWithIdSatker(tgl_awal int64, tgl_akhir in
 
 	if cekbox == true && id_jenis == 0 && id_satker != 0 {
 		query = `SELECT concat(MONTHNAME(tanggal),' ',YEAR(tanggal)) AS periode, SUM(total) AS total 
-		from merge_table_pelayanan where id_satker = ? GROUP BY periode`
+		from merge_table_pelayanan where id_kantor = ? GROUP BY periode`
 	}
 
 	var (
@@ -379,7 +379,7 @@ func (m *repository) GetReportMonthYearWithIdSatkerAndIdJenis(tgl_awal int64, tg
 
 		} else if id_jenis > 4 {
 			query = `SELECT concat(MONTHNAME(tanggal),' ',YEAR(tanggal)) AS periode, SUM(total) AS total 
-				from merge_table_pelayanan where id_satker = ? AND id_jenis = ? GROUP BY periode`
+				from merge_table_pelayanan where id_kantor = ? AND id_jenis = ? GROUP BY periode`
 		}
 
 		rows, err := m.DB.Query(query, id_satker, id_jenis)
