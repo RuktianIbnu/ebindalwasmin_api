@@ -221,6 +221,7 @@ func (m *repository) GetReportMonthYear(tgl_awal int64, tgl_akhir int64, cekbox 
 			return nil, err
 		}
 		list = append(list, &data)
+		log.Println(&data)
 	}
 	return list, nil
 }
