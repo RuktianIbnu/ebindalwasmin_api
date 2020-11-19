@@ -105,7 +105,6 @@ func (m *handler) GetPnbpPaspor(c *gin.Context) {
 	)
 	c.ShouldBindJSON(&body)
 
-	log.Println(body.IDLayanan, body.IDKantor)
 	list, err := m.pasporUsecase.GetPnbpPaspor(body.IDLayanan, body.IDKantor)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, resp.Format(500, err))

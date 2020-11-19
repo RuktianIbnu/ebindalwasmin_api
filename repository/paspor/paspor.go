@@ -304,11 +304,11 @@ func (m *repository) GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []
 	if id_layanan == 1 {
 		if id_kantor == 0 {
 			// PASPOR
-			query = `SELECT k.nama_kantor,concat(MONTHNAME(p.tanggal),' ',YEAR(p.tanggal)) AS periode,
+			query = `SELECT k.nama_kantor,CONCAT(CAST(MONTHNAME(p.tanggal) AS CHAR(3)),' ',YEAR(p.tanggal)) AS periode,
 			SUM(p.total) AS total
 			from data_paspor AS p 
 			inner join kantor AS k ON k.id_kantor = p.id_kantor 
-			GROUP BY periode`
+			GROUP BY year(p.tanggal),month(p.tanggal) order BY p.tanggal`
 
 			rows, err = m.DB.Query(query)
 			if err != nil {
@@ -338,11 +338,11 @@ func (m *repository) GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []
 
 			return list, nil
 		} else {
-			query = `SELECT k.nama_kantor,concat(MONTHNAME(p.tanggal),' ',YEAR(p.tanggal)) AS periode,
+			query = `SELECT k.nama_kantor,CONCAT(CAST(MONTHNAME(p.tanggal) AS CHAR(3)),' ',YEAR(p.tanggal)) AS periode,
 			SUM(p.total) AS total
 			from data_paspor AS p 
 			inner join kantor AS k ON k.id_kantor = p.id_kantor 
-			WHERE p.id_kantor = ? GROUP BY periode`
+			WHERE p.id_kantor = ? GROUP BY year(p.tanggal),month(p.tanggal) order BY p.tanggal`
 
 			rows, err = m.DB.Query(query, id_kantor)
 			if err != nil {
@@ -374,11 +374,11 @@ func (m *repository) GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []
 	} else if id_layanan == 2 {
 		if id_kantor == 0 {
 			// VISA
-			query = `SELECT k.nama_kantor,concat(MONTHNAME(p.tanggal),' ',YEAR(p.tanggal)) AS periode,
+			query = `SELECT k.nama_kantor,CONCAT(CAST(MONTHNAME(p.tanggal) AS CHAR(3)),' ',YEAR(p.tanggal)) AS periode,
 			SUM(p.total) AS total
 			from data_visa AS p 
 			inner join kantor AS k ON k.id_kantor = p.id_kantor 
-			GROUP BY periode`
+			GROUP BY year(p.tanggal),month(p.tanggal) order BY p.tanggal`
 
 			rows, err = m.DB.Query(query)
 			if err != nil {
@@ -407,11 +407,11 @@ func (m *repository) GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []
 
 			return list, nil
 		} else {
-			query = `SELECT k.nama_kantor,concat(MONTHNAME(p.tanggal),' ',YEAR(p.tanggal)) AS periode,
+			query = `SELECT k.nama_kantor,CONCAT(CAST(MONTHNAME(p.tanggal) AS CHAR(3)),' ',YEAR(p.tanggal)) AS periode,
 			SUM(p.total) AS total
 			from data_visa AS p 
 			inner join kantor AS k ON k.id_kantor = p.id_kantor 
-			WHERE p.id_kantor = ? GROUP BY periode`
+			WHERE p.id_kantor = ? GROUP BY year(p.tanggal),month(p.tanggal) order BY p.tanggal`
 
 			rows, err = m.DB.Query(query, id_kantor)
 			if err != nil {
@@ -443,11 +443,11 @@ func (m *repository) GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []
 	} else if id_layanan == 3 {
 		if id_kantor == 0 {
 			// INTAL
-			query = `SELECT k.nama_kantor,concat(MONTHNAME(p.tanggal),' ',YEAR(p.tanggal)) AS periode,
+			query = `SELECT k.nama_kantor,CONCAT(CAST(MONTHNAME(p.tanggal) AS CHAR(3)),' ',YEAR(p.tanggal)) AS periode,
 			SUM(p.total) AS total
 			from data_izinkeimigrasian AS p 
 			inner join kantor AS k ON k.id_kantor = p.id_kantor 
-			GROUP BY periode`
+			GROUP BY year(p.tanggal),month(p.tanggal) order BY p.tanggal`
 
 			rows, err = m.DB.Query(query)
 			if err != nil {
@@ -476,11 +476,11 @@ func (m *repository) GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []
 
 			return list, nil
 		} else {
-			query = `SELECT k.nama_kantor,concat(MONTHNAME(p.tanggal),' ',YEAR(p.tanggal)) AS periode,
+			query = `SELECT k.nama_kantor,CONCAT(CAST(MONTHNAME(p.tanggal) AS CHAR(3)),' ',YEAR(p.tanggal)) AS periode,
 			SUM(p.total) AS total
 			from data_izinkeimigrasian AS p 
 			inner join kantor AS k ON k.id_kantor = p.id_kantor 
-			WHERE p.id_kantor = ? GROUP BY periode`
+			WHERE p.id_kantor = ? GROUP BY year(p.tanggal),month(p.tanggal) order BY p.tanggal`
 
 			rows, err = m.DB.Query(query, id_kantor)
 			if err != nil {
@@ -512,11 +512,11 @@ func (m *repository) GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []
 	} else if id_layanan == 4 {
 		if id_kantor == 0 {
 			// PNBP LAINNYA
-			query = `SELECT k.nama_kantor,concat(MONTHNAME(p.tanggal),' ',YEAR(p.tanggal)) AS periode,
+			query = `SELECT k.nama_kantor,CONCAT(CAST(MONTHNAME(p.tanggal) AS CHAR(3)),' ',YEAR(p.tanggal)) AS periode,
 			SUM(p.total) AS total
 			from data_pnbplainnya AS p 
 			inner join kantor AS k ON k.id_kantor = p.id_kantor 
-			GROUP BY periode`
+			GROUP BY year(p.tanggal),month(p.tanggal) order BY p.tanggal`
 
 			rows, err = m.DB.Query(query)
 			if err != nil {
@@ -545,11 +545,11 @@ func (m *repository) GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []
 
 			return list, nil
 		} else {
-			query = `SELECT k.nama_kantor,concat(MONTHNAME(p.tanggal),' ',YEAR(p.tanggal)) AS periode,
+			query = `SELECT k.nama_kantor,CONCAT(CAST(MONTHNAME(p.tanggal) AS CHAR(3)),' ',YEAR(p.tanggal)) AS periode,
 			SUM(p.total) AS total
 			from data_pnbplainnya AS p 
 			inner join kantor AS k ON k.id_kantor = p.id_kantor 
-			WHERE p.id_kantor = ? GROUP BY periode`
+			WHERE p.id_kantor = ? GROUP BY year(p.tanggal),month(p.tanggal) order BY p.tanggal`
 
 			rows, err = m.DB.Query(query, id_kantor)
 			if err != nil {
