@@ -13,7 +13,7 @@ type Repository interface {
 	// UpdateOneByID(data *model.User) (rowsAffected int64, err error)
 	// GetOneByID(id int64) (*model.User, error)
 	// GetUserPasswordByEmail(email string) (int64, string, error)
-	GetAllByDate(date int64) (result []*model.Intal, err error)
+	GetAllByDate(date int64, id_satker int64) (result []*model.Intal, err error)
 	GetPivotPerwilayah() (result []*model.PasporPivotPerwilayah, err error)
 	GetKelaminPer10hari(date1 int64, date2 int64) (result []*model.IntalPermohonanperKelaminPer10hari, err error)
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
@@ -147,7 +147,7 @@ func NewRepository() Repository {
 // 	return id, pwd, nil
 // }
 
-func (m *repository) GetAllByDate(date int64) (result []*model.Intal, err error) {
+func (m *repository) GetAllByDate(date int64, id_satker int64) (result []*model.Intal, err error) {
 	query := `select 
 	coalesce(id, 0), 
 	coalesce(id_jenis, 0), 
@@ -158,13 +158,13 @@ func (m *repository) GetAllByDate(date int64) (result []*model.Intal, err error)
 	coalesce(perempuan, 0), 
 	coalesce(total, 0), 
 	coalesce(id_wilayah_kerja, 0)
-	from data_izinkeimigrasian where tanggal = FROM_UNIXTIME(?, '%Y-%m-%d')`
+	from data_izinkeimigrasian where tanggal = FROM_UNIXTIME(?, '%Y-%m-%d') AND id_kantor = ?`
 
 	var (
 		list = make([]*model.Intal, 0)
 	)
 
-	rows, err := m.DB.Query(query, date)
+	rows, err := m.DB.Query(query, date, id_satker)
 	if err != nil {
 		return nil, err
 	}

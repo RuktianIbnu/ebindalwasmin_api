@@ -11,7 +11,7 @@ type Usecase interface {
 	// Create(data *model.User) (err error)
 	// UpdateOneByID(data *model.User) (rowsAffected int64, err error)
 	// GetOneByID(id int64) (result *model.User, err error)
-	GetAllByDate(date int64) (result []*model.Visa, err error)
+	GetAllByDate(date int64, id_satker int64) (result []*model.Visa, err error)
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
 
@@ -50,8 +50,8 @@ func NewUsecase() Usecase {
 // 	return m.userRepo.GetOneByID(id)
 // }
 
-func (m *usecase) GetAllByDate(date int64) (result []*model.Visa, err error) {
-	return m.visaRepo.GetAllByDate(date)
+func (m *usecase) GetAllByDate(date int64, id_satker int64) (result []*model.Visa, err error) {
+	return m.visaRepo.GetAllByDate(date, id_satker)
 }
 
 // func (m *usecase) DeleteOneByID(id int64) (rowsAffected int64, err error) {
