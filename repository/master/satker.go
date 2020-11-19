@@ -535,7 +535,7 @@ func (m *repository) GetReportDateWithIdJenis(tgl_awal int64, tgl_akhir int64, c
 			query = `SELECT jenispnbp, tanggal, total 
 				from merge_table_pelayanan where tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d') AND id_jenis = ?`
 
-			rows, err := m.DB.Query(query, id_jenis)
+			rows, err := m.DB.Query(query, tgl_awal, tgl_akhir, id_jenis)
 			if err != nil {
 				return nil, err
 			}
