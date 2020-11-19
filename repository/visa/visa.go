@@ -13,7 +13,7 @@ type Repository interface {
 	// UpdateOneByID(data *model.User) (rowsAffected int64, err error)
 	// GetOneByID(id int64) (*model.User, error)
 	// GetUserPasswordByEmail(email string) (int64, string, error)
-	GetAllByDate(date int64) (result []*model.Visa, err error)
+	GetAllByDate(date int64, id_satker int64) (result []*model.Visa, err error)
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
 
@@ -145,7 +145,7 @@ func NewRepository() Repository {
 // 	return id, pwd, nil
 // }
 
-func (m *repository) GetAllByDate(date int64) (result []*model.Visa, err error) {
+func (m *repository) GetAllByDate(date int64, id_satker int64) (result []*model.Visa, err error) {
 	query := `select 
 	coalesce(id, 0), 
 	coalesce(id_jenis, 0), 
@@ -156,13 +156,13 @@ func (m *repository) GetAllByDate(date int64) (result []*model.Visa, err error) 
 	coalesce(perempuan, 0), 
 	coalesce(total, 0), 
 	coalesce(id_wilayah_kerja, 0)
-	from data_visa where tanggal = FROM_UNIXTIME(?, '%Y-%m-%d')`
+	from data_visa where tanggal = FROM_UNIXTIME(?, '%Y-%m-%d') AND id_kantor = ?`
 
 	var (
 		list = make([]*model.Visa, 0)
 	)
 
-	rows, err := m.DB.Query(query, date)
+	rows, err := m.DB.Query(query, date, id_satker)
 	if err != nil {
 		return nil, err
 	}

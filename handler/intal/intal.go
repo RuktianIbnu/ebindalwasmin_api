@@ -101,12 +101,21 @@ func (m *handler) GetAllByDate(c *gin.Context) {
 	// 	page, _  = strconv.Atoi(c.DefaultQuery("page", "1"))
 	// 	search   = c.Query("search")
 	// )
+	type Body struct {
+		Tanggal  string `json:"tanggal"`
+		IDSatker int64  `json:"id_satker"`
+	}
 	var (
-		tm, _ = time.Parse("2006-01-02", c.Param("tanggal"))
+		body Body
+	)
+	c.ShouldBindJSON(&body)
+
+	var (
+		tm, _  = time.Parse("2006-01-02", body.Tanggal)
+		satker = body.IDSatker
 	)
 
-	log.Println(tm.Unix())
-	list, err := m.intalUsecase.GetAllByDate(tm.Unix())
+	list, err := m.intalUsecase.GetAllByDate(tm.Unix(), satker)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, resp.Format(500, err))
 		return
