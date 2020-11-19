@@ -165,3 +165,9 @@ type PNBPPermohonanperKelaminPer10hari struct {
 	IDWilayahKerja int64      `json:"id_wilayah_kerja,omitempty"`
 	IDKantor       int64      `json:"id_kantor,omitempty"`
 }
+
+type GeneralPnbp struct {
+	NamaKantor string `json:"nama_kantor"`
+	Periode    string `json:"periode"`
+	Total      int64  `json:"total"`
+}

@@ -44,6 +44,7 @@ func Routes() *gin.Engine {
 			resources.GET("/user/:id", userHandler.GetOneByID)
 			resources.GET("/satker", satkerHandler.GetAllSatker)
 			resources.POST("/filter-monthyear/", satkerHandler.GetReportMonthYear)
+			resources.POST("/paspor-pnbp/", pasporHandler.GetPnbpPaspor)
 
 			resources.POST("/paspor-by/", pasporHandler.GetAllByDate)
 			resources.GET("/paspor-pivot-perwilayah", pasporHandler.GetPivotPerwilayah)

@@ -18,6 +18,7 @@ type Handler interface {
 	GetAllByDate(c *gin.Context)
 	GetPivotPerwilayah(c *gin.Context)
 	GetKelaminPer10hari(c *gin.Context)
+	GetPnbpPaspor(c *gin.Context)
 	// DeleteOneByID(c *gin.Context)
 }
 
@@ -94,6 +95,24 @@ func NewHandler() Handler {
 
 // 	c.JSON(http.StatusOK, resp.Format(200, nil, data))
 // }
+func (m *handler) GetPnbpPaspor(c *gin.Context) {
+	type Body struct {
+		IDLayanan int64 `json:"id_layanan"`
+		IDKantor  int64 `json:"id_kantor"`
+	}
+	var (
+		body Body
+	)
+	c.ShouldBindJSON(&body)
+
+	list, err := m.pasporUsecase.GetPnbpPaspor(body.IDLayanan, body.IDKantor)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, resp.Format(500, err))
+		return
+	}
+
+	c.JSON(http.StatusOK, resp.Format(200, nil, list))
+}
 
 func (m *handler) GetAllByDate(c *gin.Context) {
 	// var (

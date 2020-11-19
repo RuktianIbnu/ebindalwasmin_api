@@ -17,6 +17,7 @@ type Repository interface {
 	GetAllByDate(date int64, id_satker int64) (result []*model.Paspor, err error)
 	GetPivotPerwilayah() (result []*model.PasporPivotPerwilayah, err error)
 	GetKelaminPer10hari() (result []*model.PasporPermohonanperKelaminPer10hari, err error)
+	GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []*model.GeneralPnbp, err error)
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
 
@@ -284,6 +285,145 @@ func (m *repository) GetKelaminPer10hari() (result []*model.PasporPermohonanperK
 			&data.Tanggal,
 			&data.IDWilayahKerja,
 			&data.IDKantor,
+		); err != nil {
+			return nil, err
+		}
+
+		list = append(list, &data)
+	}
+
+	return list, nil
+}
+
+func (m *repository) GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []*model.GeneralPnbp, err error) {
+	var (
+		query string
+		rows  *sql.Rows
+	)
+
+	if id_layanan == 1 {
+		if id_kantor == 0 {
+			// PASPOR
+			query = `SELECT k.nama_kantor,concat(MONTHNAME(p.tanggal),' ',YEAR(p.tanggal)) AS periode,
+			SUM(p.total) AS total
+			from data_paspor AS p 
+			inner join kantor AS k ON k.id_kantor = p.id_kantor 
+			GROUP BY periode`
+
+			rows, err = m.DB.Query(query)
+			if err != nil {
+				return nil, err
+			}
+			defer rows.Close()
+		} else {
+			query = `SELECT k.nama_kantor,concat(MONTHNAME(p.tanggal),' ',YEAR(p.tanggal)) AS periode,
+			SUM(p.total) AS total
+			from data_paspor AS p 
+			inner join kantor AS k ON k.id_kantor = p.id_kantor 
+			WHERE p.id_kantor = ? GROUP BY periode`
+
+			rows, err = m.DB.Query(query, id_kantor)
+			if err != nil {
+				return nil, err
+			}
+			defer rows.Close()
+		}
+	} else if id_layanan == 2 {
+		if id_kantor == 0 {
+			// VISA
+			query = `SELECT k.nama_kantor,concat(MONTHNAME(p.tanggal),' ',YEAR(p.tanggal)) AS periode,
+			SUM(p.total) AS total
+			from data_visa AS p 
+			inner join kantor AS k ON k.id_kantor = p.id_kantor 
+			GROUP BY periode`
+
+			rows, err = m.DB.Query(query)
+			if err != nil {
+				return nil, err
+			}
+			defer rows.Close()
+		} else {
+			query = `SELECT k.nama_kantor,concat(MONTHNAME(p.tanggal),' ',YEAR(p.tanggal)) AS periode,
+			SUM(p.total) AS total
+			from data_visa AS p 
+			inner join kantor AS k ON k.id_kantor = p.id_kantor 
+			WHERE p.id_kantor = ? GROUP BY periode`
+
+			rows, err = m.DB.Query(query, id_kantor)
+			if err != nil {
+				return nil, err
+			}
+			defer rows.Close()
+		}
+	} else if id_layanan == 3 {
+		if id_kantor == 0 {
+			// INTAL
+			query = `SELECT k.nama_kantor,concat(MONTHNAME(p.tanggal),' ',YEAR(p.tanggal)) AS periode,
+			SUM(p.total) AS total
+			from data_izinkeimigrasian AS p 
+			inner join kantor AS k ON k.id_kantor = p.id_kantor 
+			GROUP BY periode`
+
+			rows, err = m.DB.Query(query)
+			if err != nil {
+				return nil, err
+			}
+			defer rows.Close()
+		} else {
+			query = `SELECT k.nama_kantor,concat(MONTHNAME(p.tanggal),' ',YEAR(p.tanggal)) AS periode,
+			SUM(p.total) AS total
+			from data_izinkeimigrasian AS p 
+			inner join kantor AS k ON k.id_kantor = p.id_kantor 
+			WHERE p.id_kantor = ? GROUP BY periode`
+
+			rows, err = m.DB.Query(query, id_kantor)
+			if err != nil {
+				return nil, err
+			}
+			defer rows.Close()
+		}
+	} else if id_layanan == 4 {
+		if id_kantor == 0 {
+			// PNBP LAINNYA
+			query = `SELECT k.nama_kantor,concat(MONTHNAME(p.tanggal),' ',YEAR(p.tanggal)) AS periode,
+			SUM(p.total) AS total
+			from data_pnbplainnya AS p 
+			inner join kantor AS k ON k.id_kantor = p.id_kantor 
+			GROUP BY periode`
+
+			rows, err = m.DB.Query(query)
+			if err != nil {
+				return nil, err
+			}
+			defer rows.Close()
+		} else {
+			query = `SELECT k.nama_kantor,concat(MONTHNAME(p.tanggal),' ',YEAR(p.tanggal)) AS periode,
+			SUM(p.total) AS total
+			from data_pnbplainnya AS p 
+			inner join kantor AS k ON k.id_kantor = p.id_kantor 
+			WHERE p.id_kantor = ? GROUP BY periode`
+
+			rows, err = m.DB.Query(query, id_kantor)
+			if err != nil {
+				return nil, err
+			}
+			defer rows.Close()
+		}
+	}
+
+	var (
+		list = make([]*model.GeneralPnbp, 0)
+	)
+
+	for rows.Next() {
+		var (
+			data model.GeneralPnbp
+		)
+
+		if err := rows.Scan(
+			&data.NamaKantor,
+			&data.Periode,
+			&data.Total,
 		); err != nil {
 			return nil, err
 		}
