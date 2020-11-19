@@ -315,6 +315,28 @@ func (m *repository) GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []
 				return nil, err
 			}
 			defer rows.Close()
+
+			var (
+				list = make([]*model.GeneralPnbp, 0)
+			)
+
+			for rows.Next() {
+				var (
+					data model.GeneralPnbp
+				)
+
+				if err := rows.Scan(
+					&data.NamaKantor,
+					&data.Periode,
+					&data.Total,
+				); err != nil {
+					return nil, err
+				}
+
+				list = append(list, &data)
+			}
+
+			return list, nil
 		} else {
 			query = `SELECT k.nama_kantor,concat(MONTHNAME(p.tanggal),' ',YEAR(p.tanggal)) AS periode,
 			SUM(p.total) AS total
@@ -327,6 +349,27 @@ func (m *repository) GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []
 				return nil, err
 			}
 			defer rows.Close()
+			var (
+				list = make([]*model.GeneralPnbp, 0)
+			)
+
+			for rows.Next() {
+				var (
+					data model.GeneralPnbp
+				)
+
+				if err := rows.Scan(
+					&data.NamaKantor,
+					&data.Periode,
+					&data.Total,
+				); err != nil {
+					return nil, err
+				}
+
+				list = append(list, &data)
+			}
+
+			return list, nil
 		}
 	} else if id_layanan == 2 {
 		if id_kantor == 0 {
@@ -342,6 +385,27 @@ func (m *repository) GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []
 				return nil, err
 			}
 			defer rows.Close()
+			var (
+				list = make([]*model.GeneralPnbp, 0)
+			)
+
+			for rows.Next() {
+				var (
+					data model.GeneralPnbp
+				)
+
+				if err := rows.Scan(
+					&data.NamaKantor,
+					&data.Periode,
+					&data.Total,
+				); err != nil {
+					return nil, err
+				}
+
+				list = append(list, &data)
+			}
+
+			return list, nil
 		} else {
 			query = `SELECT k.nama_kantor,concat(MONTHNAME(p.tanggal),' ',YEAR(p.tanggal)) AS periode,
 			SUM(p.total) AS total
@@ -354,6 +418,27 @@ func (m *repository) GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []
 				return nil, err
 			}
 			defer rows.Close()
+			var (
+				list = make([]*model.GeneralPnbp, 0)
+			)
+
+			for rows.Next() {
+				var (
+					data model.GeneralPnbp
+				)
+
+				if err := rows.Scan(
+					&data.NamaKantor,
+					&data.Periode,
+					&data.Total,
+				); err != nil {
+					return nil, err
+				}
+
+				list = append(list, &data)
+			}
+
+			return list, nil
 		}
 	} else if id_layanan == 3 {
 		if id_kantor == 0 {
@@ -369,6 +454,27 @@ func (m *repository) GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []
 				return nil, err
 			}
 			defer rows.Close()
+			var (
+				list = make([]*model.GeneralPnbp, 0)
+			)
+
+			for rows.Next() {
+				var (
+					data model.GeneralPnbp
+				)
+
+				if err := rows.Scan(
+					&data.NamaKantor,
+					&data.Periode,
+					&data.Total,
+				); err != nil {
+					return nil, err
+				}
+
+				list = append(list, &data)
+			}
+
+			return list, nil
 		} else {
 			query = `SELECT k.nama_kantor,concat(MONTHNAME(p.tanggal),' ',YEAR(p.tanggal)) AS periode,
 			SUM(p.total) AS total
@@ -381,6 +487,27 @@ func (m *repository) GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []
 				return nil, err
 			}
 			defer rows.Close()
+			var (
+				list = make([]*model.GeneralPnbp, 0)
+			)
+
+			for rows.Next() {
+				var (
+					data model.GeneralPnbp
+				)
+
+				if err := rows.Scan(
+					&data.NamaKantor,
+					&data.Periode,
+					&data.Total,
+				); err != nil {
+					return nil, err
+				}
+
+				list = append(list, &data)
+			}
+
+			return list, nil
 		}
 	} else if id_layanan == 4 {
 		if id_kantor == 0 {
@@ -396,6 +523,27 @@ func (m *repository) GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []
 				return nil, err
 			}
 			defer rows.Close()
+			var (
+				list = make([]*model.GeneralPnbp, 0)
+			)
+
+			for rows.Next() {
+				var (
+					data model.GeneralPnbp
+				)
+
+				if err := rows.Scan(
+					&data.NamaKantor,
+					&data.Periode,
+					&data.Total,
+				); err != nil {
+					return nil, err
+				}
+
+				list = append(list, &data)
+			}
+
+			return list, nil
 		} else {
 			query = `SELECT k.nama_kantor,concat(MONTHNAME(p.tanggal),' ',YEAR(p.tanggal)) AS periode,
 			SUM(p.total) AS total
@@ -408,30 +556,31 @@ func (m *repository) GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []
 				return nil, err
 			}
 			defer rows.Close()
+			var (
+				list = make([]*model.GeneralPnbp, 0)
+			)
+
+			for rows.Next() {
+				var (
+					data model.GeneralPnbp
+				)
+
+				if err := rows.Scan(
+					&data.NamaKantor,
+					&data.Periode,
+					&data.Total,
+				); err != nil {
+					return nil, err
+				}
+
+				list = append(list, &data)
+			}
+
+			return list, nil
 		}
 	}
 
-	var (
-		list = make([]*model.GeneralPnbp, 0)
-	)
-
-	for rows.Next() {
-		var (
-			data model.GeneralPnbp
-		)
-
-		if err := rows.Scan(
-			&data.NamaKantor,
-			&data.Periode,
-			&data.Total,
-		); err != nil {
-			return nil, err
-		}
-
-		list = append(list, &data)
-	}
-
-	return list, nil
+	return
 }
 
 // func (m *repository) DeleteOneByID(id int64) (rowsAffected int64, err error) {
