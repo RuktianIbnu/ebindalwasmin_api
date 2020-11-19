@@ -266,8 +266,8 @@ func (m *repository) GetKelaminPer10hari() (result []*model.PasporPermohonanperK
 
 	then := now.AddDate(0, 0, -10)
 
-	//log.Println(date1, date2)
-	rows, err := m.DB.Query(query, now.Unix(), then.Unix())
+	log.Println(now, then, now.Unix(), then.Unix())
+	rows, err := m.DB.Query(query, then.Unix(), now.Unix())
 	if err != nil {
 		return nil, err
 	}
