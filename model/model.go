@@ -156,3 +156,12 @@ type PnbpGetTotalPnbp struct {
 	PnbpLainnya int64  `json:"pnbp_lainnya"`
 	Total       int64  `json:"total"`
 }
+
+type PNBPPermohonanperKelaminPer10hari struct {
+	Pnbp           int64      `json:"pnbp"`
+	Laki           int64      `json:"laki"`
+	Perempuan      int64      `json:"perempuan"`
+	Tanggal        *time.Time `json:"tanggal"`
+	IDWilayahKerja int64      `json:"id_wilayah_kerja,omitempty"`
+	IDKantor       int64      `json:"id_kantor,omitempty"`
+}

@@ -5,6 +5,7 @@ import (
 	"ebindalwasmin_api/helpers"
 	"ebindalwasmin_api/model"
 	"log"
+	"time"
 )
 
 // Repository ...
@@ -16,6 +17,7 @@ type Repository interface {
 	GetAllByDate(date int64, id_satker int64) (result []*model.Pnbp, err error)
 	GetAllkategoriPNBPPerbulanTahun() (result []*model.PnbpAllKategoriPerbulanTahun, err error)
 	GetTotalPnbp() (result []*model.PnbpGetTotalPnbp, err error)
+	GetKelaminPer10hari() (result []*model.PNBPPermohonanperKelaminPer10hari, err error)
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
 
@@ -146,6 +148,51 @@ func NewRepository() Repository {
 
 // 	return id, pwd, nil
 // }
+
+func (m *repository) GetKelaminPer10hari() (result []*model.PNBPPermohonanperKelaminPer10hari, err error) {
+	query := `select 
+	coalesce(izintinggal, 0), 
+	coalesce(laki, 0), 
+	coalesce(perempuan, 0),
+	tanggal, 
+	coalesce(id_wilayah_kerja, 0), 
+	coalesce(id_kantor, 0)
+	from izintinggal where tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d')`
+
+	var (
+		list = make([]*model.PNBPPermohonanperKelaminPer10hari, 0)
+	)
+
+	now := time.Now()
+	then := now.AddDate(0, 0, -10)
+
+	rows, err := m.DB.Query(query, then.Unix(), now.Unix())
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			data model.PNBPPermohonanperKelaminPer10hari
+		)
+
+		if err := rows.Scan(
+			&data.Pnbp,
+			&data.Laki,
+			&data.Perempuan,
+			&data.Tanggal,
+			&data.IDWilayahKerja,
+			&data.IDKantor,
+		); err != nil {
+			return nil, err
+		}
+
+		list = append(list, &data)
+	}
+
+	return list, nil
+}
 
 func (m *repository) GetAllByDate(date int64, id_satker int64) (result []*model.Pnbp, err error) {
 	query := `select 

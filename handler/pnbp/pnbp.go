@@ -17,6 +17,7 @@ type Handler interface {
 	GetAllByDate(c *gin.Context)
 	GetAllkategoriPNBPPerbulanTahun(c *gin.Context)
 	GetTotalPnbp(c *gin.Context)
+	GetKelaminPer10hari(c *gin.Context)
 	// DeleteOneByID(c *gin.Context)
 }
 
@@ -93,6 +94,16 @@ func NewHandler() Handler {
 
 // 	c.JSON(http.StatusOK, resp.Format(200, nil, data))
 // }
+
+func (m *handler) GetKelaminPer10hari(c *gin.Context) {
+	list, err := m.pnbpUsecase.GetKelaminPer10hari()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, resp.Format(500, err))
+		return
+	}
+
+	c.JSON(http.StatusOK, resp.Format(200, nil, list))
+}
 
 func (m *handler) GetAllByDate(c *gin.Context) {
 	// var (

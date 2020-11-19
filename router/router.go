@@ -60,6 +60,7 @@ func Routes() *gin.Engine {
 			resources.POST("/pnbp-by/", pnbpHandler.GetAllByDate)
 			resources.GET("/pnbp-perbulantahun", pnbpHandler.GetAllkategoriPNBPPerbulanTahun)
 			resources.GET("/pnbp-total", pnbpHandler.GetTotalPnbp)
+			resources.GET("/pnbp-byKelaminPer10hari/", pnbpHandler.GetKelaminPer10hari)
 		}
 	}
 

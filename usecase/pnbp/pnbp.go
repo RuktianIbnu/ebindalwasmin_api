@@ -14,6 +14,7 @@ type Usecase interface {
 	GetAllByDate(date int64, id_satker int64) (result []*model.Pnbp, err error)
 	GetAllkategoriPNBPPerbulanTahun() (result []*model.PnbpAllKategoriPerbulanTahun, err error)
 	GetTotalPnbp() (result []*model.PnbpGetTotalPnbp, err error)
+	GetKelaminPer10hari() (result []*model.PNBPPermohonanperKelaminPer10hari, err error)
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
 
@@ -62,6 +63,10 @@ func (m *usecase) GetAllkategoriPNBPPerbulanTahun() (result []*model.PnbpAllKate
 
 func (m *usecase) GetTotalPnbp() (result []*model.PnbpGetTotalPnbp, err error) {
 	return m.pnbpRepo.GetTotalPnbp()
+}
+
+func (m *usecase) GetKelaminPer10hari() (result []*model.PNBPPermohonanperKelaminPer10hari, err error) {
+	return m.pnbpRepo.GetKelaminPer10hari()
 }
 
 // func (m *usecase) DeleteOneByID(id int64) (rowsAffected int64, err error) {

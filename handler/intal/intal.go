@@ -3,7 +3,6 @@ package intal
 import (
 	resp "ebindalwasmin_api/helpers/response"
 	iu "ebindalwasmin_api/usecase/intal"
-	"log"
 	"net/http"
 	"time"
 
@@ -135,21 +134,7 @@ func (m *handler) GetPivotPerwilayah(c *gin.Context) {
 }
 
 func (m *handler) GetKelaminPer10hari(c *gin.Context) {
-	type Tgl struct {
-		TanggalAwal  string `json:"tanggal_awal"`
-		TanggalAkhir string `json:"tanggal_akhir"`
-	}
-	var (
-		date Tgl
-	)
-
-	c.ShouldBindJSON(&date)
-
-	date1, _ := time.Parse("2006-01-02", date.TanggalAwal)
-	date2, _ := time.Parse("2006-01-02", date.TanggalAkhir)
-
-	log.Println(date1.Unix(), date2.Unix())
-	list, err := m.intalUsecase.GetKelaminPer10hari(date1.Unix(), date2.Unix())
+	list, err := m.intalUsecase.GetKelaminPer10hari()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, resp.Format(500, err))
 		return

@@ -13,7 +13,7 @@ type Usecase interface {
 	// GetOneByID(id int64) (result *model.User, err error)
 	GetAllByDate(date int64, id_satker int64) (result []*model.Intal, err error)
 	GetPivotPerwilayah() (result []*model.PasporPivotPerwilayah, err error)
-	GetKelaminPer10hari(date1 int64, date2 int64) (result []*model.IntalPermohonanperKelaminPer10hari, err error)
+	GetKelaminPer10hari() (result []*model.IntalPermohonanperKelaminPer10hari, err error)
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
 
@@ -60,8 +60,8 @@ func (m *usecase) GetPivotPerwilayah() (result []*model.PasporPivotPerwilayah, e
 	return m.intalRepo.GetPivotPerwilayah()
 }
 
-func (m *usecase) GetKelaminPer10hari(date1 int64, date2 int64) (result []*model.IntalPermohonanperKelaminPer10hari, err error) {
-	return m.intalRepo.GetKelaminPer10hari(date1, date2)
+func (m *usecase) GetKelaminPer10hari() (result []*model.IntalPermohonanperKelaminPer10hari, err error) {
+	return m.intalRepo.GetKelaminPer10hari()
 }
 
 // func (m *usecase) DeleteOneByID(id int64) (rowsAffected int64, err error) {

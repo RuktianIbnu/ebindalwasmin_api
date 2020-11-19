@@ -5,6 +5,7 @@ import (
 	"ebindalwasmin_api/helpers"
 	"ebindalwasmin_api/model"
 	"log"
+	"time"
 )
 
 // Repository ...
@@ -15,7 +16,7 @@ type Repository interface {
 	// GetUserPasswordByEmail(email string) (int64, string, error)
 	GetAllByDate(date int64, id_satker int64) (result []*model.Intal, err error)
 	GetPivotPerwilayah() (result []*model.PasporPivotPerwilayah, err error)
-	GetKelaminPer10hari(date1 int64, date2 int64) (result []*model.IntalPermohonanperKelaminPer10hari, err error)
+	GetKelaminPer10hari() (result []*model.IntalPermohonanperKelaminPer10hari, err error)
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
 
@@ -247,7 +248,7 @@ func (m *repository) GetPivotPerwilayah() (result []*model.PasporPivotPerwilayah
 	return list, nil
 }
 
-func (m *repository) GetKelaminPer10hari(date1 int64, date2 int64) (result []*model.IntalPermohonanperKelaminPer10hari, err error) {
+func (m *repository) GetKelaminPer10hari() (result []*model.IntalPermohonanperKelaminPer10hari, err error) {
 	query := `select 
 	coalesce(izintinggal, 0), 
 	coalesce(laki, 0), 
@@ -261,8 +262,10 @@ func (m *repository) GetKelaminPer10hari(date1 int64, date2 int64) (result []*mo
 		list = make([]*model.IntalPermohonanperKelaminPer10hari, 0)
 	)
 
-	//log.Println(date1, date2)
-	rows, err := m.DB.Query(query, date1, date2)
+	now := time.Now()
+	then := now.AddDate(0, 0, -10)
+
+	rows, err := m.DB.Query(query, then.Unix(), now.Unix())
 	if err != nil {
 		return nil, err
 	}
@@ -286,7 +289,6 @@ func (m *repository) GetKelaminPer10hari(date1 int64, date2 int64) (result []*mo
 
 		list = append(list, &data)
 	}
-	log.Println(date1, date2)
 
 	return list, nil
 }
