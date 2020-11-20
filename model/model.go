@@ -118,8 +118,8 @@ type Intal struct {
 // Intal Permohonan perkelamin per 10 hari...
 type IntalPermohonanperKelaminPer10hari struct {
 	IzinTinggal    int64      `json:"izintinggal"`
-	Laki           int64      `json:"laki,omitempty"`
-	Perempuan      int64      `json:"perempuan,omitempty"`
+	Laki           int64      `json:"laki"`
+	Perempuan      int64      `json:"perempuan"`
 	Tanggal        *time.Time `json:"tanggal"`
 	IDWilayahKerja int64      `json:"id_wilayah_kerja,omitempty"`
 	IDKantor       int64      `json:"id_kantor,omitempty"`
