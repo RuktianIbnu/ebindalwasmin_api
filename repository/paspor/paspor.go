@@ -255,8 +255,8 @@ func (m *repository) GetKelaminPer10hari(id_kantor int64) (result []*model.Paspo
 	)
 	if id_kantor == 0 {
 		query = `select 
-		sum(laki) AS laki, 
-		sum(perempuan) AS wanita,
+		coalesce(sum(laki) AS laki, 0), 
+		coalesce(sum(perempuan) AS wanita, 0),
 		id_kantor
 		from paspor WHERE tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d')`
 		var (
