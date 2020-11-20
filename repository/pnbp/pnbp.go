@@ -155,8 +155,8 @@ func (m *repository) GetKelaminPer10hari(id_kantor int64) (result []*model.PNBPP
 	)
 	if id_kantor == 0 {
 		query = `select 
-		coalesce(sum(laki) AS laki, 0), 
-		coalesce(sum(perempuan) AS wanita, 0),
+		sum(laki) AS laki, 
+		sum(perempuan) AS wanita,
 		id_kantor
 		from pnbp WHERE tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d')`
 		var (
@@ -193,8 +193,8 @@ func (m *repository) GetKelaminPer10hari(id_kantor int64) (result []*model.PNBPP
 		return list, nil
 	} else if id_kantor > 0 {
 		query = `select 
-		coalesce(sum(laki) AS laki, 0), 
-		coalesce(sum(perempuan) AS wanita, 0),
+		sum(laki) AS laki, 
+		sum(perempuan) AS wanita,
 		id_kantor
 		from pnbp WHERE id_kantor = ? and tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d')
 		GROUP BY id_kantor;`
