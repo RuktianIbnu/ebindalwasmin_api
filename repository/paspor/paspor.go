@@ -16,7 +16,7 @@ type Repository interface {
 	// GetUserPasswordByEmail(email string) (int64, string, error)
 	GetAllByDate(date int64, id_satker int64) (result []*model.Paspor, err error)
 	GetPivotPerwilayah() (result []*model.PasporPivotPerwilayah, err error)
-	GetKelaminPer10hari() (result []*model.PasporPermohonanperKelaminPer10hari, err error)
+	GetKelaminPer10hari(id_kantor int64) (result []*model.PasporPermohonanperKelaminPer10hari, err error)
 	GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []*model.GeneralPnbp, err error)
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
@@ -249,48 +249,91 @@ func (m *repository) GetAllByDate(date int64, id_satker int64) (result []*model.
 	return list, nil
 }
 
-func (m *repository) GetKelaminPer10hari() (result []*model.PasporPermohonanperKelaminPer10hari, err error) {
-	query := `SELECT SUM(t.laki) AS laki, SUM(t.perempuan) AS perempuan FROM 
-	(select 
-	paspor, 
-	laki, 
-	perempuan,
-	tanggal, 
-	id_wilayah_kerja, 
-	id_kantor
-	from paspor where tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d')) t`
-
+func (m *repository) GetKelaminPer10hari(id_kantor int64) (result []*model.PasporPermohonanperKelaminPer10hari, err error) {
 	var (
-		list = make([]*model.PasporPermohonanperKelaminPer10hari, 0)
+		query string
 	)
-
-	now := time.Now()
-
-	then := now.AddDate(0, 0, -150)
-
-	log.Println(then.Unix(), now.Unix())
-	rows, err := m.DB.Query(query, then.Unix(), now.Unix())
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
+	if id_kantor == 0 {
+		query = `select 
+		sum(laki) AS laki, 
+		sum(perempuan) AS wanita,
+		id_kantor
+		from paspor WHERE tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d')`
 		var (
-			data model.PasporPermohonanperKelaminPer10hari
+			list = make([]*model.PasporPermohonanperKelaminPer10hari, 0)
 		)
 
-		if err := rows.Scan(
-			&data.Laki,
-			&data.Perempuan,
-		); err != nil {
+		now := time.Now()
+
+		then := now.AddDate(0, 0, -150)
+
+		log.Println(then.Unix(), now.Unix())
+		rows, err := m.DB.Query(query, then.Unix(), now.Unix())
+		if err != nil {
 			return nil, err
 		}
+		defer rows.Close()
 
-		list = append(list, &data)
+		for rows.Next() {
+			var (
+				data model.PasporPermohonanperKelaminPer10hari
+			)
+
+			if err := rows.Scan(
+				&data.Laki,
+				&data.Perempuan,
+				&data.IDKantor,
+			); err != nil {
+				return nil, err
+			}
+
+			list = append(list, &data)
+		}
+
+		return list, nil
+	} else if id_kantor > 0 {
+		query = `select 
+		sum(laki) AS laki, 
+		sum(perempuan) AS wanita,
+		id_kantor
+		from paspor WHERE id_kantor = ? and tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d')
+		GROUP BY id_kantor;`
+
+		var (
+			list = make([]*model.PasporPermohonanperKelaminPer10hari, 0)
+		)
+
+		now := time.Now()
+
+		then := now.AddDate(0, 0, -150)
+
+		log.Println(then.Unix(), now.Unix())
+		rows, err := m.DB.Query(query, id_kantor, then.Unix(), now.Unix())
+		if err != nil {
+			return nil, err
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			var (
+				data model.PasporPermohonanperKelaminPer10hari
+			)
+
+			if err := rows.Scan(
+				&data.Laki,
+				&data.Perempuan,
+				&data.IDKantor,
+			); err != nil {
+				return nil, err
+			}
+
+			list = append(list, &data)
+		}
+
+		return list, nil
 	}
 
-	return list, nil
+	return
 }
 
 func (m *repository) GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []*model.GeneralPnbp, err error) {

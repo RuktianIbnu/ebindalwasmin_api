@@ -5,6 +5,7 @@ import (
 	pu "ebindalwasmin_api/usecase/paspor"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -155,7 +156,8 @@ func (m *handler) GetPivotPerwilayah(c *gin.Context) {
 }
 
 func (m *handler) GetKelaminPer10hari(c *gin.Context) {
-	list, err := m.pasporUsecase.GetKelaminPer10hari()
+	id_kantor, _ := strconv.ParseInt(c.Param("id_kantor"), 10, 64)
+	list, err := m.pasporUsecase.GetKelaminPer10hari(id_kantor)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, resp.Format(500, err))
 		return

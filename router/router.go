@@ -48,20 +48,20 @@ func Routes() *gin.Engine {
 
 			resources.POST("/paspor-by/", pasporHandler.GetAllByDate)
 			resources.GET("/paspor-pivot-perwilayah", pasporHandler.GetPivotPerwilayah)
-			resources.GET("/paspor-byKelaminPer10hari/", pasporHandler.GetKelaminPer10hari)
+			resources.GET("/paspor-byKelaminPer10hari/:id_kantor", pasporHandler.GetKelaminPer10hari)
 
 			resources.POST("/visa-by/tanggal", visaHandler.GetAllByDate)
 			//resources.GET("/visa-by/:variable/:value", visaHandler.GetAllByDate)
 
 			resources.POST("/intal-by/", intalHandler.GetAllByDate)
 			resources.GET("/intal-pivot-perwilayah", intalHandler.GetPivotPerwilayah)
-			resources.GET("/intal-byKelaminPer10hari/", intalHandler.GetKelaminPer10hari)
+			resources.GET("/intal-byKelaminPer10hari/:id_kantor", intalHandler.GetKelaminPer10hari)
 
 			resources.GET("/pnbp-kategori", kategoriPNBPHandler.GetAllByParent)
 			resources.POST("/pnbp-by/", pnbpHandler.GetAllByDate)
 			resources.GET("/pnbp-perbulantahun", pnbpHandler.GetAllkategoriPNBPPerbulanTahun)
 			resources.GET("/pnbp-total", pnbpHandler.GetTotalPnbp)
-			resources.GET("/pnbp-byKelaminPer10hari/", pnbpHandler.GetKelaminPer10hari)
+			resources.GET("/pnbp-byKelaminPer10hari/:id_kantor", pnbpHandler.GetKelaminPer10hari)
 		}
 	}
 

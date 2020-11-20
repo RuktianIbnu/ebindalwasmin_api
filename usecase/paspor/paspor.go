@@ -13,7 +13,7 @@ type Usecase interface {
 	// GetOneByID(id int64) (result *model.User, err error)
 	GetAllByDate(date int64, id_satker int64) (result []*model.Paspor, err error)
 	GetPivotPerwilayah() (result []*model.PasporPivotPerwilayah, err error)
-	GetKelaminPer10hari() (result []*model.PasporPermohonanperKelaminPer10hari, err error)
+	GetKelaminPer10hari(id_kantor int64) (result []*model.PasporPermohonanperKelaminPer10hari, err error)
 	GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []*model.GeneralPnbp, err error)
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
@@ -61,8 +61,8 @@ func (m *usecase) GetPivotPerwilayah() (result []*model.PasporPivotPerwilayah, e
 	return m.pasporRepo.GetPivotPerwilayah()
 }
 
-func (m *usecase) GetKelaminPer10hari() (result []*model.PasporPermohonanperKelaminPer10hari, err error) {
-	return m.pasporRepo.GetKelaminPer10hari()
+func (m *usecase) GetKelaminPer10hari(id_kantor int64) (result []*model.PasporPermohonanperKelaminPer10hari, err error) {
+	return m.pasporRepo.GetKelaminPer10hari(id_kantor)
 }
 
 func (m *usecase) GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []*model.GeneralPnbp, err error) {
