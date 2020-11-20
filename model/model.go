@@ -37,6 +37,7 @@ type User struct {
 	UpdatedAt        *time.Time `json:"updated_at"`
 	DeletedAt        *time.Time `json:"deleted_at"`
 	IDKantor         int64      `json:"id_kantor"`
+	NamaKantor       string     `json:"nama_kantor"`
 }
 
 // KategoriPNBP ...

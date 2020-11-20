@@ -89,7 +89,8 @@ func (m *repository) GetOneByID(id int64) (*model.User, error) {
 	created_at, 
 	updated_at, 
 	deleted_at, 
-	coalesce(id_kantor, 0)     
+	coalesce(id_kantor, 0),
+	(SELECT nama_kantor FROM kantor WHERE id_kantor = users.id_kantor) AS nama_kantor     
 	FROM users 
 	WHERE id = ? AND active = 1`
 
@@ -115,6 +116,7 @@ func (m *repository) GetOneByID(id int64) (*model.User, error) {
 		&data.UpdatedAt,
 		&data.DeletedAt,
 		&data.IDKantor,
+		&data.NamaKantor,
 	); err != nil {
 		return nil, err
 	}
