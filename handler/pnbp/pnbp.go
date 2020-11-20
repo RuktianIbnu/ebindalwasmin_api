@@ -4,6 +4,7 @@ import (
 	resp "ebindalwasmin_api/helpers/response"
 	pu "ebindalwasmin_api/usecase/pnbp"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -96,7 +97,8 @@ func NewHandler() Handler {
 // }
 
 func (m *handler) GetKelaminPer10hari(c *gin.Context) {
-	list, err := m.pnbpUsecase.GetKelaminPer10hari()
+	id_kantor, _ := strconv.ParseInt(c.Param("id_kantor"), 10, 64)
+	list, err := m.pnbpUsecase.GetKelaminPer10hari(id_kantor)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, resp.Format(500, err))
 		return
