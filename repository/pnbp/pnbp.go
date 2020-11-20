@@ -150,14 +150,15 @@ func NewRepository() Repository {
 // }
 
 func (m *repository) GetKelaminPer10hari() (result []*model.PNBPPermohonanperKelaminPer10hari, err error) {
-	query := `select 
+	query := `SELECT SUM(t.laki) AS laki, SUM(t.perempuan) AS perempuan FROM 
+	(select 
 	coalesce(izintinggal, 0), 
 	coalesce(laki, 0), 
 	coalesce(perempuan, 0),
 	tanggal, 
 	coalesce(id_wilayah_kerja, 0), 
 	coalesce(id_kantor, 0)
-	from izintinggal where tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d')`
+	from izintinggal where tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d')) t`
 
 	var (
 		list = make([]*model.PNBPPermohonanperKelaminPer10hari, 0)

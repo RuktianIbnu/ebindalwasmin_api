@@ -250,14 +250,15 @@ func (m *repository) GetAllByDate(date int64, id_satker int64) (result []*model.
 }
 
 func (m *repository) GetKelaminPer10hari() (result []*model.PasporPermohonanperKelaminPer10hari, err error) {
-	query := `select 
-	coalesce(paspor, 0), 
-	coalesce(laki, 0), 
-	coalesce(perempuan, 0),
+	query := `SELECT SUM(t.laki) AS laki, SUM(t.perempuan) AS perempuan FROM 
+	(select 
+	paspor, 
+	laki, 
+	perempuan,
 	tanggal, 
-	coalesce(id_wilayah_kerja, 0), 
-	coalesce(id_kantor, 0)
-	from paspor where tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d')`
+	id_wilayah_kerja, 
+	id_kantor
+	from paspor where tanggal BETWEEN FROM_UNIXTIME(?, '%Y-%m-%d') AND FROM_UNIXTIME(?, '%Y-%m-%d')) t`
 
 	var (
 		list = make([]*model.PasporPermohonanperKelaminPer10hari, 0)
@@ -265,8 +266,9 @@ func (m *repository) GetKelaminPer10hari() (result []*model.PasporPermohonanperK
 
 	now := time.Now()
 
-	then := now.AddDate(0, 0, -10)
+	then := now.AddDate(0, 0, -150)
 
+	log.Println(then.Unix(), now.Unix())
 	rows, err := m.DB.Query(query, then.Unix(), now.Unix())
 	if err != nil {
 		return nil, err
@@ -279,12 +281,8 @@ func (m *repository) GetKelaminPer10hari() (result []*model.PasporPermohonanperK
 		)
 
 		if err := rows.Scan(
-			&data.Paspor,
 			&data.Laki,
 			&data.Perempuan,
-			&data.Tanggal,
-			&data.IDWilayahKerja,
-			&data.IDKantor,
 		); err != nil {
 			return nil, err
 		}
