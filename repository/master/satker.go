@@ -196,7 +196,7 @@ func (m *repository) GetReportMonthYear(tgl_awal int64, tgl_akhir int64, cekbox 
 	if cekbox == true && id_jenis == 0 && id_satker == 0 {
 		query = `SELECT concat(MONTHNAME(tanggal),' ',YEAR(tanggal)) AS periode,
 		SUM(total) AS total
-		from merge_table_pelayanan GROUP BY periode`
+		from merge_table_pelayanan GROUP BY year(tanggal),month(tanggal) order BY tanggal`
 	}
 
 	var (
@@ -231,7 +231,7 @@ func (m *repository) GetReportMonthYearWithIdSatker(tgl_awal int64, tgl_akhir in
 
 	if cekbox == true && id_jenis == 0 && id_satker != 0 {
 		query = `SELECT concat(MONTHNAME(tanggal),' ',YEAR(tanggal)) AS periode, SUM(total) AS total 
-		from merge_table_pelayanan where id_kantor = ? GROUP BY periode`
+		from merge_table_pelayanan where id_kantor = ? GROUP BY year(tanggal),month(tanggal) order BY tanggal`
 	}
 
 	var (
@@ -271,16 +271,16 @@ func (m *repository) GetReportMonthYearWithIdJenis(tgl_awal int64, tgl_akhir int
 			switch id_jenis {
 			case 1: // paspor ...
 				query = `SELECT concat(MONTHNAME(tanggal),' ',YEAR(tanggal)) AS periode, SUM(total) AS total 
-				from data_paspor GROUP BY periode`
+				from data_paspor GROUP BY year(tanggal),month(tanggal) order BY tanggal`
 			case 2: // visa ...
 				query = `SELECT concat(MONTHNAME(tanggal),' ',YEAR(tanggal)) AS periode, SUM(total) AS total 
-				from data_visa GROUP BY periode`
+				from data_visa GROUP BY year(tanggal),month(tanggal) order BY tanggal`
 			case 3: // intal ...
 				query = `SELECT concat(MONTHNAME(tanggal),' ',YEAR(tanggal)) AS periode, SUM(total) AS total 
-				from data_izinkeimigrasian GROUP BY periode`
+				from data_izinkeimigrasian GROUP BY year(tanggal),month(tanggal) order BY tanggal`
 			case 4: // pnbp lainnya ...
 				query = `SELECT concat(MONTHNAME(tanggal),' ',YEAR(tanggal)) AS periode, SUM(total) AS total 
-				from data_pnbplainnya GROUP BY periode`
+				from data_pnbplainnya GROUP BY year(tanggal),month(tanggal) order BY tanggal`
 			}
 		}
 
@@ -306,7 +306,7 @@ func (m *repository) GetReportMonthYearWithIdJenis(tgl_awal int64, tgl_akhir int
 		return list, nil
 	} else if id_jenis > 4 {
 		query = `SELECT concat(MONTHNAME(tanggal),' ',YEAR(tanggal)) AS periode, SUM(total) AS total 
-			from merge_table_pelayanan where id_jenis = ? GROUP BY periode`
+			from merge_table_pelayanan where id_jenis = ? GROUP BY year(tanggal),month(tanggal) order BY tanggal`
 
 		rows, err := m.DB.Query(query, id_jenis)
 		if err != nil {
@@ -344,16 +344,16 @@ func (m *repository) GetReportMonthYearWithIdSatkerAndIdJenis(tgl_awal int64, tg
 			switch id_jenis {
 			case 1: // paspor ...
 				query = `SELECT concat(MONTHNAME(tanggal),' ',YEAR(tanggal)) AS periode, SUM(total) AS total 
-						from data_paspor where id_kantor = ? GROUP BY periode`
+						from data_paspor where id_kantor = ? GROUP BY year(tanggal),month(tanggal) order BY tanggal`
 			case 2: // visa ...
 				query = `SELECT concat(MONTHNAME(tanggal),' ',YEAR(tanggal)) AS periode, SUM(total) AS total 
-						from data_visa where id_kantor = ? GROUP BY periode`
+						from data_visa where id_kantor = ? GROUP BY year(tanggal),month(tanggal) order BY tanggal`
 			case 3: // intal ...
 				query = `SELECT concat(MONTHNAME(tanggal),' ',YEAR(tanggal)) AS periode, SUM(total) AS total 
-						from data_izinkeimigrasian where id_kantor = ? GROUP BY periode`
+						from data_izinkeimigrasian where id_kantor = ? GROUP BY year(tanggal),month(tanggal) order BY tanggal`
 			case 4: // pnbp lainnya ...
 				query = `SELECT concat(MONTHNAME(tanggal),' ',YEAR(tanggal)) AS periode, SUM(total) AS total 
-						from data_pnbplainnya where id_kantor = ? GROUP BY periode`
+						from data_pnbplainnya where id_kantor = ? GROUP BY year(tanggal),month(tanggal) order BY tanggal`
 			}
 
 			rows, err := m.DB.Query(query, id_satker)
@@ -379,7 +379,7 @@ func (m *repository) GetReportMonthYearWithIdSatkerAndIdJenis(tgl_awal int64, tg
 
 		} else if id_jenis > 4 {
 			query = `SELECT concat(MONTHNAME(tanggal),' ',YEAR(tanggal)) AS periode, SUM(total) AS total 
-				from merge_table_pelayanan where id_kantor = ? AND id_jenis = ? GROUP BY periode`
+				from merge_table_pelayanan where id_kantor = ? AND id_jenis = ? GROUP BY year(tanggal),month(tanggal) order BY tanggal`
 		}
 
 		rows, err := m.DB.Query(query, id_satker, id_jenis)
