@@ -80,6 +80,12 @@ type PasporPivotPerwilayah struct {
 	KabLainnya2      int64  `json:"kab_lainnya_2"`
 }
 
+type GetPivotPerwilayah struct {
+	Tahun   int64  `json:"tahun"`
+	Wilayah string `json:"wilayah"`
+	Total   int64  `json:"total"`
+}
+
 // Paspor Permohonan perkelamin per 10 hari...
 type PasporPermohonanperKelaminPer10hari struct {
 	Paspor         int64      `json:"paspor"`

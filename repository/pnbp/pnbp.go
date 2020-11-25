@@ -18,6 +18,8 @@ type Repository interface {
 	GetAllkategoriPNBPPerbulanTahun() (result []*model.PnbpAllKategoriPerbulanTahun, err error)
 	GetTotalPnbp() (result []*model.PnbpGetTotalPnbp, err error)
 	GetKelaminPer10hari(id_kantor int64) (result []*model.PNBPPermohonanperKelaminPer10hari, err error)
+
+	GetPivotPerwilayah(id_jenis int64, id_kantor int64, tahun int64) (result []*model.GetPivotPerwilayah, err error)
 	// DeleteOneByID(id int64) (rowsAffected int64, err error)
 }
 
@@ -148,6 +150,146 @@ func NewRepository() Repository {
 
 // 	return id, pwd, nil
 // }
+func (m *repository) GetPivotPerwilayah(id_jenis int64, id_kantor int64, tahun int64) (result []*model.GetPivotPerwilayah, err error) {
+	var (
+		query string
+	)
+	if id_kantor == 0 {
+		if id_jenis == 1 {
+			query = `SELECT 
+			concat(YEAR(p.tanggal)) AS tahun, 
+			k.wilayah_kerja AS wilayah, 
+			COALESCE(SUM(p.total),0) AS total 
+			FROM data_paspor AS p
+			INNER JOIN wilayah_kerja AS k ON k.id_wilayahkerja = p.id_wilayah_kerja
+			WHERE YEAR(p.tanggal) = ?
+			GROUP BY k.wilayah_kerja ORDER BY wilayah ASC`
+		} else if id_jenis == 2 {
+			query = `SELECT 
+			concat(YEAR(p.tanggal)) AS tahun, 
+			k.wilayah_kerja AS wilayah, 
+			COALESCE(SUM(p.total),0) AS total 
+			FROM data_visa AS p
+			INNER JOIN wilayah_kerja AS k ON k.id_wilayahkerja = p.id_wilayah_kerja
+			WHERE YEAR(p.tanggal) = ?
+			GROUP BY k.wilayah_kerja ORDER BY wilayah ASC`
+		} else if id_jenis == 3 {
+			query = `SELECT 
+			concat(YEAR(p.tanggal)) AS tahun, 
+			k.wilayah_kerja AS wilayah, 
+			COALESCE(SUM(p.total),0) AS total 
+			FROM data_izinkeimigrasian AS p
+			INNER JOIN wilayah_kerja AS k ON k.id_wilayahkerja = p.id_wilayah_kerja
+			WHERE YEAR(p.tanggal) = ?
+			GROUP BY k.wilayah_kerja ORDER BY wilayah ASC`
+		} else if id_jenis == 4 {
+			query = `SELECT 
+			concat(YEAR(p.tanggal)) AS tahun, 
+			k.wilayah_kerja AS wilayah, 
+			COALESCE(SUM(p.total),0) AS total 
+			FROM data_pnbplainnya AS p
+			INNER JOIN wilayah_kerja AS k ON k.id_wilayahkerja = p.id_wilayah_kerja
+			WHERE YEAR(p.tanggal) = ?
+			GROUP BY k.wilayah_kerja ORDER BY wilayah ASC`
+		}
+
+		var (
+			list = make([]*model.GetPivotPerwilayah, 0)
+		)
+
+		rows, err := m.DB.Query(query, tahun)
+		if err != nil {
+			return nil, err
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			var (
+				data model.GetPivotPerwilayah
+			)
+
+			if err := rows.Scan(
+				&data.Tahun,
+				&data.Wilayah,
+				&data.Total,
+			); err != nil {
+				return nil, err
+			}
+
+			list = append(list, &data)
+		}
+
+		return list, nil
+	} else if id_kantor > 0 {
+		if id_jenis == 1 {
+			query = `SELECT 
+			concat(YEAR(p.tanggal)) AS tahun, 
+			k.wilayah_kerja AS wilayah, 
+			COALESCE(SUM(p.total),0) AS total 
+			FROM data_paspor AS p
+			INNER JOIN wilayah_kerja AS k ON k.id_wilayahkerja = p.id_wilayah_kerja
+			WHERE p.id_kantor = ? AND YEAR(p.tanggal) = ?
+			GROUP BY k.wilayah_kerja ORDER BY wilayah ASC`
+		} else if id_jenis == 2 {
+			query = `SELECT 
+			concat(YEAR(p.tanggal)) AS tahun, 
+			k.wilayah_kerja AS wilayah, 
+			COALESCE(SUM(p.total),0) AS total 
+			FROM data_visa AS p
+			INNER JOIN wilayah_kerja AS k ON k.id_wilayahkerja = p.id_wilayah_kerja
+			WHERE p.id_kantor = ? AND YEAR(p.tanggal) = ?
+			GROUP BY k.wilayah_kerja ORDER BY wilayah ASC`
+		} else if id_jenis == 3 {
+			query = `SELECT 
+			concat(YEAR(p.tanggal)) AS tahun, 
+			k.wilayah_kerja AS wilayah, 
+			COALESCE(SUM(p.total),0) AS total 
+			FROM data_izinkeimigrasian AS p
+			INNER JOIN wilayah_kerja AS k ON k.id_wilayahkerja = p.id_wilayah_kerja
+			WHERE p.id_kantor = ? AND YEAR(p.tanggal) = ?
+			GROUP BY k.wilayah_kerja ORDER BY wilayah ASC`
+		} else if id_jenis == 4 {
+			query = `SELECT 
+			concat(YEAR(p.tanggal)) AS tahun, 
+			k.wilayah_kerja AS wilayah, 
+			COALESCE(SUM(p.total),0) AS total 
+			FROM data_pnbplainnya AS p
+			INNER JOIN wilayah_kerja AS k ON k.id_wilayahkerja = p.id_wilayah_kerja
+			WHERE p.id_kantor = ? AND YEAR(p.tanggal) = ?
+			GROUP BY k.wilayah_kerja ORDER BY wilayah ASC`
+		}
+
+		var (
+			list = make([]*model.GetPivotPerwilayah, 0)
+		)
+
+		rows, err := m.DB.Query(query, id_kantor, tahun)
+		if err != nil {
+			return nil, err
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			var (
+				data model.GetPivotPerwilayah
+			)
+
+			if err := rows.Scan(
+				&data.Tahun,
+				&data.Wilayah,
+				&data.Total,
+			); err != nil {
+				return nil, err
+			}
+
+			list = append(list, &data)
+		}
+
+		return list, nil
+	}
+
+	return
+}
 
 func (m *repository) GetKelaminPer10hari(id_kantor int64) (result []*model.PNBPPermohonanperKelaminPer10hari, err error) {
 	var (
@@ -165,7 +307,7 @@ func (m *repository) GetKelaminPer10hari(id_kantor int64) (result []*model.PNBPP
 
 		now := time.Now()
 
-		then := now.AddDate(0, 0, -150)
+		then := now.AddDate(0, 0, -10)
 
 		log.Println(then.Unix(), now.Unix())
 		rows, err := m.DB.Query(query, then.Unix(), now.Unix())

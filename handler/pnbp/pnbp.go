@@ -3,6 +3,7 @@ package pnbp
 import (
 	resp "ebindalwasmin_api/helpers/response"
 	pu "ebindalwasmin_api/usecase/pnbp"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -19,6 +20,7 @@ type Handler interface {
 	GetAllkategoriPNBPPerbulanTahun(c *gin.Context)
 	GetTotalPnbp(c *gin.Context)
 	GetKelaminPer10hari(c *gin.Context)
+	GetPivotPerwilayah(c *gin.Context)
 	// DeleteOneByID(c *gin.Context)
 }
 
@@ -95,6 +97,39 @@ func NewHandler() Handler {
 
 // 	c.JSON(http.StatusOK, resp.Format(200, nil, data))
 // }
+
+func (m *handler) GetPivotPerwilayah(c *gin.Context) {
+	// var (
+	// 	limit, _ = strconv.Atoi(c.DefaultQuery("limit", "10"))
+	// 	page, _  = strconv.Atoi(c.DefaultQuery("page", "1"))
+	// 	search   = c.Query("search")
+	// )
+	type Body struct {
+		IDJenis  int64 `json:"id_jenis"`
+		IDKantor int64 `json:"id_kantor"`
+		Tahun    int64 `json:"tahun"`
+	}
+	var (
+		body Body
+	)
+	c.ShouldBindJSON(&body)
+
+	var (
+		id_jenis  = body.IDJenis
+		id_kantor = body.IDKantor
+		tahun     = body.Tahun
+	)
+
+	log.Println(id_jenis, id_kantor, tahun)
+
+	list, err := m.pnbpUsecase.GetPivotPerwilayah(id_jenis, id_kantor, tahun)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, resp.Format(500, err))
+		return
+	}
+
+	c.JSON(http.StatusOK, resp.Format(200, nil, list))
+}
 
 func (m *handler) GetKelaminPer10hari(c *gin.Context) {
 	id_kantor, _ := strconv.ParseInt(c.Param("id_kantor"), 10, 64)
