@@ -159,7 +159,7 @@ func (m *repository) GetAllSatker() (result []*model.Satker, err error) {
 	query := `select 
 	coalesce(id_kantor, 0), 
 	coalesce(nama_kantor, 0)
-	from kantor`
+	from kantor WHERE NOT id_kantor = 99`
 
 	var (
 		list = make([]*model.Satker, 0)
