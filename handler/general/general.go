@@ -57,5 +57,9 @@ func (m *handler) Login(c *gin.Context) {
 	if err != nil {
 	}
 
-	c.JSON(http.StatusOK, resp.Format(200, nil, gin.H{"token": token, "id": id}))
+	user, err := ur.NewRepository().GetOneByID(id)
+	if err != nil {
+	}
+
+	c.JSON(http.StatusOK, resp.Format(200, nil, gin.H{"token": token, "user": user}))
 }
