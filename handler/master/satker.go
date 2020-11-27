@@ -123,6 +123,7 @@ func (m *handler) GetReportMonthYear(c *gin.Context) {
 	id_jenis := body.IDJenis
 	id_satker := body.IDSatker
 
+	log.Println(tm_awal, tm_akhir, cekbox, id_jenis, id_satker)
 	list, err := m.satkerUsecase.GetReportMonthYear(tm_awal.Unix(), tm_akhir.Unix(), cekbox, id_jenis, id_satker)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, resp.Format(500, err))

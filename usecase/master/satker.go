@@ -57,21 +57,21 @@ func (m *usecase) GetAllSatker() (result []*model.Satker, err error) {
 
 func (m *usecase) GetReportMonthYear(tgl_awal int64, tgl_akhir int64, cekbox bool, id_jenis int64, id_satker int64) (result []*model.ReportMonthYear, err error) {
 
-	if cekbox == true && id_jenis == 0 && id_satker == 0 {
+	if cekbox == true && id_jenis == 0 && id_satker == 99 {
 		return m.satkerRepo.GetReportMonthYear(tgl_awal, tgl_akhir, cekbox, id_jenis, id_satker)
-	} else if cekbox == true && id_jenis == 0 && id_satker != 0 {
+	} else if cekbox == true && id_jenis == 0 && id_satker != 99 {
 		return m.satkerRepo.GetReportMonthYearWithIdSatker(tgl_awal, tgl_akhir, cekbox, id_jenis, id_satker)
-	} else if cekbox == true && id_jenis != 0 && id_satker == 0 {
+	} else if cekbox == true && id_jenis != 0 && id_satker == 99 {
 		return m.satkerRepo.GetReportMonthYearWithIdJenis(tgl_awal, tgl_akhir, cekbox, id_jenis, id_satker)
-	} else if cekbox == true && id_jenis != 0 && id_satker != 0 {
+	} else if cekbox == true && id_jenis != 0 && id_satker != 99 {
 		return m.satkerRepo.GetReportMonthYearWithIdSatkerAndIdJenis(tgl_awal, tgl_akhir, cekbox, id_jenis, id_satker)
-	} else if cekbox == false && id_jenis == 0 && id_satker == 0 {
+	} else if cekbox == false && id_jenis == 0 && id_satker == 99 {
 		return m.satkerRepo.GetReportDateAll(tgl_awal, tgl_akhir)
-	} else if cekbox == false && id_jenis == 0 && id_satker != 0 {
+	} else if cekbox == false && id_jenis == 0 && id_satker != 99 {
 		return m.satkerRepo.GetReportDateWithIdSatker(tgl_awal, tgl_akhir, cekbox, id_jenis, id_satker)
-	} else if cekbox == false && id_jenis != 0 && id_satker == 0 {
+	} else if cekbox == false && id_jenis != 0 && id_satker == 99 {
 		return m.satkerRepo.GetReportDateWithIdJenis(tgl_awal, tgl_akhir, cekbox, id_jenis, id_satker)
-	} else if cekbox == false && id_jenis != 0 && id_satker != 0 {
+	} else if cekbox == false && id_jenis != 0 && id_satker != 99 {
 		return m.satkerRepo.GetReportDateWithIdSatkerAndIdJenis(tgl_awal, tgl_akhir, cekbox, id_jenis, id_satker)
 	}
 
