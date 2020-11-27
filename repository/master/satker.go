@@ -193,7 +193,7 @@ func (m *repository) GetAllSatker() (result []*model.Satker, err error) {
 func (m *repository) GetReportMonthYear(tgl_awal int64, tgl_akhir int64, cekbox bool, id_jenis int64, id_satker int64) (result []*model.ReportMonthYear, err error) {
 	var query string
 
-	if cekbox == true && id_jenis == 0 && id_satker == 0 {
+	if cekbox == true && id_jenis == 0 && id_satker == 99 {
 		query = `SELECT concat(MONTHNAME(tanggal),' ',YEAR(tanggal)) AS periode,
 		SUM(total) AS total
 		from merge_table_pelayanan GROUP BY year(tanggal),month(tanggal) order BY tanggal`
@@ -229,7 +229,7 @@ func (m *repository) GetReportMonthYear(tgl_awal int64, tgl_akhir int64, cekbox 
 func (m *repository) GetReportMonthYearWithIdSatker(tgl_awal int64, tgl_akhir int64, cekbox bool, id_jenis int64, id_satker int64) (result []*model.ReportMonthYear, err error) {
 	var query string
 
-	if cekbox == true && id_jenis == 0 && id_satker != 0 {
+	if cekbox == true && id_jenis == 0 && id_satker != 99 {
 		query = `SELECT concat(MONTHNAME(tanggal),' ',YEAR(tanggal)) AS periode, SUM(total) AS total 
 		from merge_table_pelayanan where id_kantor = ? GROUP BY year(tanggal),month(tanggal) order BY tanggal`
 	}
@@ -267,7 +267,7 @@ func (m *repository) GetReportMonthYearWithIdJenis(tgl_awal int64, tgl_akhir int
 	)
 
 	if id_jenis <= 4 {
-		if cekbox == true && id_jenis != 0 && id_satker == 0 {
+		if cekbox == true && id_jenis != 0 && id_satker == 99 {
 			switch id_jenis {
 			case 1: // paspor ...
 				query = `SELECT concat(MONTHNAME(tanggal),' ',YEAR(tanggal)) AS periode, SUM(total) AS total 
@@ -339,7 +339,7 @@ func (m *repository) GetReportMonthYearWithIdSatkerAndIdJenis(tgl_awal int64, tg
 		query string
 	)
 
-	if cekbox == true && id_jenis != 0 && id_satker != 0 {
+	if cekbox == true && id_jenis != 0 && id_satker != 99 {
 		if id_jenis <= 4 {
 			switch id_jenis {
 			case 1: // paspor ...
@@ -445,7 +445,7 @@ func (m *repository) GetReportDateAll(tgl_awal int64, tgl_akhir int64) (result [
 func (m *repository) GetReportDateWithIdSatker(tgl_awal int64, tgl_akhir int64, cekbox bool, id_jenis int64, id_satker int64) (result []*model.ReportMonthYear, err error) {
 	var query string
 
-	if cekbox == false && id_jenis == 0 && id_satker != 0 {
+	if cekbox == false && id_jenis == 0 && id_satker != 99 {
 		query = `SELECT k.nama_layanan AS jenispnbp, p.tanggal, p.total 
 		from merge_table_pelayanan AS p 
 		INNER JOIN kategoripnbps AS k ON k.id = p.id_jenis 
@@ -485,7 +485,7 @@ func (m *repository) GetReportDateWithIdJenis(tgl_awal int64, tgl_akhir int64, c
 		query string
 	)
 
-	if cekbox == false && id_jenis != 0 && id_satker == 0 {
+	if cekbox == false && id_jenis != 0 && id_satker == 99 {
 		if id_jenis <= 4 {
 			switch id_jenis {
 			case 1: // paspor ...
@@ -568,7 +568,7 @@ func (m *repository) GetReportDateWithIdSatkerAndIdJenis(tgl_awal int64, tgl_akh
 		query string
 	)
 
-	if cekbox == false && id_jenis != 0 && id_satker != 0 {
+	if cekbox == false && id_jenis != 0 && id_satker != 99 {
 		if id_jenis <= 4 {
 			switch id_jenis {
 			case 1: // paspor ...

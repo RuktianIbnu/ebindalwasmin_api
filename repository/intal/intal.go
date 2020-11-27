@@ -252,7 +252,7 @@ func (m *repository) GetKelaminPer10hari(id_kantor int64) (result []*model.Intal
 	var (
 		query string
 	)
-	if id_kantor == 0 {
+	if id_kantor == 99 {
 		query = `select 
 		COALESCE(sum(laki), 0) AS laki,
 		COALESCE(sum(perempuan), 0) AS wanita,

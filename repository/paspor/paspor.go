@@ -253,7 +253,7 @@ func (m *repository) GetKelaminPer10hari(id_kantor int64) (result []*model.Paspo
 	var (
 		query string
 	)
-	if id_kantor == 0 {
+	if id_kantor == 99 {
 		query = `select 
 		COALESCE(sum(laki), 0) AS laki,
 		COALESCE(sum(perempuan), 0) AS wanita,
@@ -291,7 +291,7 @@ func (m *repository) GetKelaminPer10hari(id_kantor int64) (result []*model.Paspo
 		}
 
 		return list, nil
-	} else if id_kantor > 0 {
+	} else if id_kantor != 99 {
 		query = `select 
 		COALESCE(sum(laki), 0) AS laki,
 		COALESCE(sum(perempuan), 0) AS wanita,
@@ -343,7 +343,7 @@ func (m *repository) GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []
 	)
 
 	if id_layanan == 1 {
-		if id_kantor == 0 {
+		if id_kantor == 99 {
 			// PASPOR
 			query = `SELECT k.nama_kantor,CONCAT(CAST(MONTHNAME(p.tanggal) AS CHAR(3)),' ',YEAR(p.tanggal)) AS periode,
 			SUM(p.total) AS total
@@ -413,7 +413,7 @@ func (m *repository) GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []
 			return list, nil
 		}
 	} else if id_layanan == 2 {
-		if id_kantor == 0 {
+		if id_kantor == 99 {
 			// VISA
 			query = `SELECT k.nama_kantor,CONCAT(CAST(MONTHNAME(p.tanggal) AS CHAR(3)),' ',YEAR(p.tanggal)) AS periode,
 			SUM(p.total) AS total
@@ -482,7 +482,7 @@ func (m *repository) GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []
 			return list, nil
 		}
 	} else if id_layanan == 3 {
-		if id_kantor == 0 {
+		if id_kantor == 99 {
 			// INTAL
 			query = `SELECT k.nama_kantor,CONCAT(CAST(MONTHNAME(p.tanggal) AS CHAR(3)),' ',YEAR(p.tanggal)) AS periode,
 			SUM(p.total) AS total
@@ -551,7 +551,7 @@ func (m *repository) GetPnbpPaspor(id_layanan int64, id_kantor int64) (result []
 			return list, nil
 		}
 	} else if id_layanan == 4 {
-		if id_kantor == 0 {
+		if id_kantor == 99 {
 			// PNBP LAINNYA
 			query = `SELECT k.nama_kantor,CONCAT(CAST(MONTHNAME(p.tanggal) AS CHAR(3)),' ',YEAR(p.tanggal)) AS periode,
 			SUM(p.total) AS total

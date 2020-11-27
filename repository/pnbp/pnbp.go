@@ -154,7 +154,7 @@ func (m *repository) GetPivotPerwilayah(id_jenis int64, id_kantor int64, tahun i
 	var (
 		query string
 	)
-	if id_kantor == 0 {
+	if id_kantor == 99 {
 		if id_jenis == 1 {
 			query = `SELECT 
 			concat(YEAR(p.tanggal)) AS tahun, 
@@ -220,7 +220,7 @@ func (m *repository) GetPivotPerwilayah(id_jenis int64, id_kantor int64, tahun i
 		}
 
 		return list, nil
-	} else if id_kantor > 0 {
+	} else if id_kantor != 99 {
 		if id_jenis == 1 {
 			query = `SELECT 
 			concat(YEAR(p.tanggal)) AS tahun, 
@@ -295,7 +295,7 @@ func (m *repository) GetKelaminPer10hari(id_kantor int64) (result []*model.PNBPP
 	var (
 		query string
 	)
-	if id_kantor == 0 {
+	if id_kantor == 99 {
 		query = `select 
 		COALESCE(sum(laki), 0) AS laki,
 		COALESCE(sum(perempuan), 0) AS wanita,
@@ -333,7 +333,7 @@ func (m *repository) GetKelaminPer10hari(id_kantor int64) (result []*model.PNBPP
 		}
 
 		return list, nil
-	} else if id_kantor > 0 {
+	} else if id_kantor != 99 {
 		query = `select 
 		COALESCE(sum(laki), 0) AS laki,
 		COALESCE(sum(perempuan), 0) AS wanita,
