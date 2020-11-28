@@ -1,13 +1,10 @@
 # github.com/dgrijalva/jwt-go v3.2.0+incompatible
-## explicit
 github.com/dgrijalva/jwt-go
 # github.com/gin-contrib/cors v1.3.1
-## explicit
 github.com/gin-contrib/cors
 # github.com/gin-contrib/sse v0.1.0
 github.com/gin-contrib/sse
 # github.com/gin-gonic/gin v1.6.3
-## explicit
 github.com/gin-gonic/gin
 github.com/gin-gonic/gin/binding
 github.com/gin-gonic/gin/internal/bytesconv
@@ -21,13 +18,10 @@ github.com/go-playground/universal-translator
 # github.com/go-playground/validator/v10 v10.2.0
 github.com/go-playground/validator/v10
 # github.com/go-sql-driver/mysql v1.5.0
-## explicit
 github.com/go-sql-driver/mysql
 # github.com/golang/protobuf v1.4.2
-## explicit
 github.com/golang/protobuf/proto
 # github.com/joho/godotenv v1.3.0
-## explicit
 github.com/joho/godotenv
 # github.com/json-iterator/go v1.1.9
 github.com/json-iterator/go
@@ -39,18 +33,12 @@ github.com/mattn/go-isatty
 github.com/modern-go/concurrent
 # github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742
 github.com/modern-go/reflect2
-# github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e
-## explicit
-# github.com/stretchr/testify v1.6.1
-## explicit
 # github.com/ugorji/go/codec v1.1.7
 github.com/ugorji/go/codec
 # golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897
-## explicit
 golang.org/x/crypto/bcrypt
 golang.org/x/crypto/blowfish
 # golang.org/x/sys v0.0.0-20200930185726-fdedc70b468f
-## explicit
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 # google.golang.org/protobuf v1.23.0
@@ -81,8 +69,5 @@ google.golang.org/protobuf/reflect/protoreflect
 google.golang.org/protobuf/reflect/protoregistry
 google.golang.org/protobuf/runtime/protoiface
 google.golang.org/protobuf/runtime/protoimpl
-# gopkg.in/check.v1 v1.0.0-20200902074654-038fdea0a05b
-## explicit
 # gopkg.in/yaml.v2 v2.3.0
-## explicit
 gopkg.in/yaml.v2

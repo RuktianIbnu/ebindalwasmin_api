@@ -265,7 +265,7 @@ func (m *repository) GetKelaminPer10hari(id_kantor int64) (result []*model.Paspo
 
 		now := time.Now()
 
-		then := now.AddDate(0, 0, -150)
+		then := now.AddDate(0, 0, -10)
 
 		log.Println(then.Unix(), now.Unix())
 		rows, err := m.DB.Query(query, then.Unix(), now.Unix())
@@ -305,7 +305,7 @@ func (m *repository) GetKelaminPer10hari(id_kantor int64) (result []*model.Paspo
 
 		now := time.Now()
 
-		then := now.AddDate(0, 0, -150)
+		then := now.AddDate(0, 0, -10)
 
 		log.Println(then.Unix(), now.Unix())
 		rows, err := m.DB.Query(query, id_kantor, then.Unix(), now.Unix())
